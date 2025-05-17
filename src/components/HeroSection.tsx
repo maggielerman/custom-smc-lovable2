@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
@@ -20,9 +19,15 @@ const HeroSection = () => {
               unique story in a way that celebrates love and family.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link to={user ? "/books/new" : "/login"} state={{ from: "/books/new" }}>
-                <Button size="lg" className="h-12 px-8">Start Creating Book</Button>
-              </Link>
+              {user ? (
+                <Link to="/books/new">
+                  <Button size="lg" className="h-12 px-8">Start Creating Book</Button>
+                </Link>
+              ) : (
+                <Link to="/login" state={{ from: "/books/new" }}>
+                  <Button size="lg" className="h-12 px-8">Start Creating Book</Button>
+                </Link>
+              )}
               <Link to="/how-it-works">
                 <Button 
                   variant="outline" 

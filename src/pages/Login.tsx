@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,12 +11,20 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn } = useAuth();
+  const { signIn, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   
   // Get the redirect URL from location state or default to "/"
   const from = location.state?.from || "/";
+
+  // If user is already logged in, redirect them
+  useEffect(() => {
+    if (user) {
+      console.log(`User already logged in, redirecting to ${from}`);
+      navigate(from, { replace: true });
+    }
+  }, [user, navigate, from]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,8 +37,7 @@ export default function Login() {
     try {
       setIsLoading(true);
       await signIn(email, password);
-      // After successful login, navigate to the intended page
-      navigate(from, { replace: true });
+      // Don't navigate here - let the useEffect handle it
     } catch (error) {
       console.error("Login error:", error);
       // Error handling is done in the signIn function

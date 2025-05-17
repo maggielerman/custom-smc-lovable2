@@ -1,3 +1,4 @@
+
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { supabaseClient } from '@/lib/supabase'
@@ -33,23 +34,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
       
       try {
-        // Set up auth state listener FIRST
-        const { data: { subscription } } = supabaseClient.auth.onAuthStateChange(
-          (_event, session) => {
-            setSession(session)
-            setUser(session?.user ?? null)
-          }
-        )
-        
-        // THEN check for existing session
-        const { data: { session }, error } = await supabaseClient.auth.getSession()
+        // FIRST check for existing session before setting up listener
+        // to prevent race conditions
+        const { data: { session: existingSession }, error } = await supabaseClient.auth.getSession()
         
         if (error) {
           console.error('Error fetching session:', error)
         }
         
-        setSession(session)
-        setUser(session?.user ?? null)
+        // Set initial state based on existing session
+        setSession(existingSession)
+        setUser(existingSession?.user ?? null)
+        
+        // THEN set up auth state listener for future changes
+        const { data: { subscription } } = supabaseClient.auth.onAuthStateChange(
+          (_event, updatedSession) => {
+            console.log('Auth state change:', _event, !!updatedSession)
+            setSession(updatedSession)
+            setUser(updatedSession?.user ?? null)
+          }
+        )
         
         return () => subscription.unsubscribe()
       } catch (error) {
