@@ -48,7 +48,7 @@ const AppContent = () => {
       </Route>
       
       {/* Protected routes - only accessible when logged in */}
-      <Route element={<AuthGuard requireAuth={true} />}>
+      <Route element={<AuthGuard requireAuth={true} redirectTo="/login" />}>
         <Route path="/profile" element={<Profile />} />
         <Route path="/account" element={<Account />} />
         <Route path="/my-books" element={<MyBooks />} />

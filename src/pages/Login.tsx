@@ -29,7 +29,7 @@ export default function Login() {
     try {
       setIsLoading(true);
       await signIn(email, password);
-      // After successful login, navigate to the intended page or home
+      // After successful login, navigate to the intended page
       navigate(from, { replace: true });
     } catch (error) {
       console.error("Login error:", error);

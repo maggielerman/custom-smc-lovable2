@@ -1,7 +1,11 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 
 const HeroSection = () => {
+  const { user } = useAuth();
+  
   return (
     <div className="relative overflow-hidden bg-gradient-to-b from-blue-50 to-purple-50 py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-6">
@@ -16,7 +20,7 @@ const HeroSection = () => {
               unique story in a way that celebrates love and family.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/book-types">
+              <Link to={user ? "/books/new" : "/login"} state={{ from: "/books/new" }}>
                 <Button size="lg" className="h-12 px-8">Start Creating Book</Button>
               </Link>
               <Link to="/how-it-works">

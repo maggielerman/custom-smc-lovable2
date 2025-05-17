@@ -28,7 +28,8 @@ export default function AuthGuard({
   const shouldRedirect = requireAuth ? !user : !!user;
 
   if (shouldRedirect) {
-    return <Navigate to={redirectTo} replace state={{ from: location.pathname }} />;
+    // Pass the current location in the state so we can redirect back after login
+    return <Navigate to={redirectTo} state={{ from: location.pathname }} />;
   }
 
   // Render children if authentication conditions are met
