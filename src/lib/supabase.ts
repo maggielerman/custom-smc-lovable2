@@ -1,5 +1,6 @@
 
 import { createClient } from '@supabase/supabase-js'
+import { supabase as supabaseFromIntegration } from '@/integrations/supabase/client'
 
 export type Database = {
   public: {
@@ -37,18 +38,33 @@ export type Database = {
           age_range: string
         }
       }
+      profiles: {
+        Row: {
+          id: string
+          username: string | null
+          display_name: string | null
+          avatar_url: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          username?: string | null
+          display_name?: string | null
+          avatar_url?: string | null
+        }
+        Update: {
+          username?: string | null
+          display_name?: string | null
+          avatar_url?: string | null
+        }
+      }
     }
   }
 }
 
-// Check if Supabase environment variables are available
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-// Create a placeholder client if environment variables aren't available
-export const supabaseClient = supabaseUrl && supabaseAnonKey 
-  ? createClient<Database>(supabaseUrl, supabaseAnonKey)
-  : null;
+// Create Supabase client using the integration
+export const supabaseClient = supabaseFromIntegration
 
 // Helper function to safely use the Supabase client
 export const getSupabaseClient = () => {

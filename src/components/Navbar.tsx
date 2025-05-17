@@ -8,11 +8,32 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { 
+  Menu, 
+  User,
+  LogOut,
+  BookOpen 
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const Navbar = () => {
   const { user, signOut } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
+  const getInitials = (email: string) => {
+    return email.substring(0, 2).toUpperCase();
+  };
 
   return (
     <nav className="bg-white shadow-sm py-4">
@@ -37,12 +58,40 @@ const Navbar = () => {
           </Link>
 
           {user ? (
-            <div className="flex items-center space-x-4">
-              <Link to="/dashboard">
-                <Button variant="outline">My Books</Button>
-              </Link>
-              <Button onClick={() => signOut()}>Sign Out</Button>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                  <Avatar>
+                    <AvatarFallback>{getInitials(user.email || '')}</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <div className="flex items-center justify-start gap-2 p-2">
+                  <div className="flex flex-col space-y-1 leading-none">
+                    <p className="font-medium">{user.email}</p>
+                  </div>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/my-books" className="w-full flex items-center">
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    <span>My Books</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/profile" className="w-full flex items-center">
+                    <User className="w-4 h-4 mr-2" />
+                    <span>Profile</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onSelect={handleSignOut} className="cursor-pointer">
+                  <LogOut className="w-4 h-4 mr-2" />
+                  <span>Sign Out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
             <div className="flex items-center space-x-4">
               <Link to="/login">
@@ -97,11 +146,18 @@ const Navbar = () => {
               {user ? (
                 <>
                   <Link
-                    to="/dashboard"
+                    to="/my-books"
                     className="text-lg font-medium"
                     onClick={() => setIsOpen(false)}
                   >
                     My Books
+                  </Link>
+                  <Link
+                    to="/profile"
+                    className="text-lg font-medium"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Profile
                   </Link>
                   <Button onClick={() => { signOut(); setIsOpen(false); }}>
                     Sign Out

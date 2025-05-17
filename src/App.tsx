@@ -7,6 +7,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import AuthGuard from "./components/AuthGuard";
 import { useEffect } from "react";
 import { supabaseClient } from "./lib/supabase";
 import { toast } from "sonner";
@@ -28,8 +31,22 @@ const AppContent = () => {
 
   return (
     <Routes>
+      {/* Public routes */}
       <Route path="/" element={<Index />} />
-      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+      
+      {/* Auth routes - only accessible when logged out */}
+      <Route element={<AuthGuard requireAuth={false} redirectTo="/" />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+      </Route>
+      
+      {/* Protected routes - only accessible when logged in */}
+      <Route element={<AuthGuard requireAuth={true} />}>
+        {/* Add protected routes here */}
+        {/* Example: <Route path="/dashboard" element={<Dashboard />} /> */}
+      </Route>
+      
+      {/* Catch-all route */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

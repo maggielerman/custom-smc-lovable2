@@ -69,25 +69,40 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         throw new Error('Supabase is not connected')
       }
       
-      const { error } = await supabaseClient.auth.signInWithPassword({
+      const { error, data } = await supabaseClient.auth.signInWithPassword({
         email,
         password,
       })
       
       if (error) throw error
       
-      toast({
-        title: "Welcome back!",
-        description: "You have successfully signed in.",
-      })
+      sonnerToast.success(
+        "Welcome back!",
+        {
+          description: "You have successfully signed in.",
+        }
+      )
       
-      navigate('/dashboard')
+      navigate('/')
     } catch (error: any) {
-      toast({
-        title: "Sign in failed",
-        description: error.message || "Please try again",
-        variant: "destructive",
-      })
+      console.error('Sign in error:', error)
+      
+      // Handle specific error cases
+      if (error.message.includes('Invalid login')) {
+        sonnerToast.error("Invalid login credentials", {
+          description: "The email or password you entered is incorrect.",
+        })
+      } else if (error.message.includes('Email not confirmed')) {
+        sonnerToast.error("Email not verified", {
+          description: "Please check your email and verify your account before signing in.",
+        })
+      } else {
+        sonnerToast.error("Sign in failed", {
+          description: error.message || "Please try again",
+        })
+      }
+      
+      throw error
     }
   }
 
@@ -97,24 +112,37 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         throw new Error('Supabase is not connected')
       }
       
-      const { error } = await supabaseClient.auth.signUp({
+      const { error, data } = await supabaseClient.auth.signUp({
         email,
         password,
       })
       
       if (error) throw error
       
-      toast({
-        title: "Account created!",
-        description: "Please check your email for verification.",
-      })
+      sonnerToast.success(
+        "Account created!",
+        {
+          description: "Please check your email for verification.",
+        }
+      )
+      
+      return data
       
     } catch (error: any) {
-      toast({
-        title: "Sign up failed",
-        description: error.message || "Please try again",
-        variant: "destructive",
-      })
+      console.error('Sign up error:', error)
+      
+      // Handle specific error cases
+      if (error.message.includes('already registered')) {
+        sonnerToast.error("Email already registered", {
+          description: "This email is already in use. Try signing in instead.",
+        })
+      } else {
+        sonnerToast.error("Sign up failed", {
+          description: error.message || "Please try again",
+        })
+      }
+      
+      throw error
     }
   }
 
@@ -126,13 +154,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       const { error } = await supabaseClient.auth.signOut()
       if (error) throw error
+      
+      sonnerToast.success("Signed out successfully")
       navigate('/')
     } catch (error: any) {
-      toast({
-        title: "Sign out failed",
+      sonnerToast.error("Sign out failed", {
         description: error.message || "Please try again",
-        variant: "destructive",
       })
+      console.error('Sign out error:', error)
     }
   }
 
