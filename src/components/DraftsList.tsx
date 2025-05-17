@@ -1,14 +1,15 @@
 
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabaseClient } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { EditIcon, BookOpen, Trash2 } from "lucide-react";
+import { EditIcon, BookOpen, Trash2, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
+import AddToCartInDraftsList from "./AddToCartInDraftsList";
 
 type Book = {
   id: string;
@@ -28,6 +29,7 @@ const DraftsList = ({ published }: DraftsListProps) => {
   const { user } = useAuth();
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // If no user is logged in, just set loading to false and return
@@ -86,6 +88,11 @@ const DraftsList = ({ published }: DraftsListProps) => {
       console.error("Error deleting book:", error);
       toast.error("Failed to delete book");
     }
+  };
+
+  const previewBook = (book: Book) => {
+    // For now, this redirects to the edit page, but could be updated with a preview component
+    navigate(`/books/${book.id}/edit`);
   };
 
   // If there's no user, show a simple message
@@ -161,12 +168,17 @@ const DraftsList = ({ published }: DraftsListProps) => {
               </div>
             </CardContent>
             <CardFooter className="flex sm:flex-col justify-end gap-2 p-6">
-              <Button variant="outline" size="sm" asChild>
-                <Link to={`/books/${book.id}/edit`} className="flex items-center gap-1">
+              <Button variant="outline" size="sm" onClick={() => previewBook(book)} className="flex items-center gap-1">
+                <Eye className="h-4 w-4" />
+                <span>Preview</span>
+              </Button>
+              <Button variant="outline" size="sm" asChild className="flex items-center gap-1">
+                <Link to={`/customize/${book.template_id}?book=${book.id}`}>
                   <EditIcon className="h-4 w-4" />
                   <span>Edit</span>
                 </Link>
               </Button>
+              <AddToCartInDraftsList book={book} />
               <Button 
                 variant="outline" 
                 size="sm" 

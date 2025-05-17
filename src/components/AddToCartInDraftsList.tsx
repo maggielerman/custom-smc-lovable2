@@ -37,7 +37,7 @@ const AddToCartInDraftsList = ({ book }: AddToCartInDraftsListProps) => {
   return (
     <Button 
       onClick={handleAddToCart}
-      variant="secondary"
+      variant="outline"
       size="sm"
       className="gap-1"
     >

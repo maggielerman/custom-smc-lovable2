@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabaseClient } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Image, Users, BookOpen, Palette, Save } from "lucide-react";
+import { ChevronLeft, ChevronRight, Image, Users, BookOpen, Palette, Save, ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 import CustomizationStepper from "@/components/CustomizationStepper";
 import FamilyStructureStep from "@/components/book-customization/FamilyStructureStep";
@@ -14,6 +14,7 @@ import IllustrationStep from "@/components/book-customization/IllustrationStep";
 import ReviewStep from "@/components/book-customization/ReviewStep";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { useCart } from "@/contexts/CartContext";
 
 type BookTemplate = {
   id: string;
@@ -28,6 +29,7 @@ const CustomizeBook = () => {
   const { templateId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { addItem } = useCart();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
@@ -146,13 +148,39 @@ const CustomizeBook = () => {
         publish ? "Book published successfully!" : "Draft saved successfully!"
       );
       
-      navigate("/my-books");
+      // If we save as draft, redirect to my-books, otherwise stay on the page
+      if (!publish) {
+        navigate("/my-books");
+      }
     } catch (error: any) {
       console.error("Error saving book:", error);
       toast.error("Failed to save book");
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleAddToCart = () => {
+    if (!template) return;
+    
+    // Create book item for cart
+    const bookItem = {
+      id: crypto.randomUUID(), // Generate temporary ID for non-saved books
+      title: bookData.title || template.name,
+      price: 29.99, // Default price
+      coverImageUrl: template.thumbnail_url,
+      quantity: 1
+    };
+    
+    addItem(bookItem);
+    toast.success(`${bookItem.title} added to cart`);
+  };
+
+  const handleBuyNow = () => {
+    // First add to cart
+    handleAddToCart();
+    // Then navigate to cart
+    navigate("/cart");
   };
 
   if (loading) {
@@ -248,10 +276,18 @@ const CustomizeBook = () => {
                     {saving ? "Saving..." : "Save Draft"}
                   </Button>
                   <Button 
-                    onClick={() => handleSave(true)} 
+                    variant="outline"
+                    onClick={handleAddToCart} 
                     disabled={saving}
                   >
-                    {saving ? "Publishing..." : "Publish Book"}
+                    <ShoppingCart className="h-4 w-4 mr-2" />
+                    Add to Cart
+                  </Button>
+                  <Button 
+                    onClick={handleBuyNow} 
+                    disabled={saving}
+                  >
+                    Buy Now
                   </Button>
                 </>
               ) : (
