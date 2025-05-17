@@ -48,17 +48,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         
         // THEN set up auth state listener for future changes
         const { data: { subscription } } = supabaseClient.auth.onAuthStateChange(
-          (_event, updatedSession) => {
-            console.log('Auth state change:', _event, !!updatedSession)
+          (event, updatedSession) => {
+            console.log('Auth state change:', event, !!updatedSession)
             setSession(updatedSession)
             setUser(updatedSession?.user ?? null)
+            
+            // Important: Set isLoading to false AFTER updating user/session state
+            setIsLoading(false)
           }
         )
+        
+        // Set loading to false after initial session check
+        setIsLoading(false)
         
         return () => subscription.unsubscribe()
       } catch (error) {
         console.error('Failed to get session:', error)
-      } finally {
         setIsLoading(false)
       }
     }

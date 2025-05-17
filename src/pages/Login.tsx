@@ -11,20 +11,25 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn, user } = useAuth();
+  const { signIn, user, isLoading: isAuthLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   
   // Get the redirect URL from location state or default to "/"
   const from = location.state?.from || "/";
 
-  // If user is already logged in, redirect them
+  // If user is already logged in, redirect them - but only when auth is not loading
   useEffect(() => {
-    if (user) {
+    if (user && !isAuthLoading) {
       console.log(`User already logged in, redirecting to ${from}`);
-      navigate(from, { replace: true });
+      // Add small delay to avoid potential race conditions
+      const redirectTimer = setTimeout(() => {
+        navigate(from, { replace: true });
+      }, 100);
+      
+      return () => clearTimeout(redirectTimer);
     }
-  }, [user, navigate, from]);
+  }, [user, navigate, from, isAuthLoading]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

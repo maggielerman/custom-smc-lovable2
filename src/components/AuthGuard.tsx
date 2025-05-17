@@ -20,8 +20,9 @@ export default function AuthGuard({
   useEffect(() => {
     // Only determine if we should redirect after loading is complete
     if (!isLoading) {
+      // Calculate whether access is required or forbidden based on current state
       const accessRequired = requireAuth && !user;
-      const accessForbidden = !requireAuth && !!user; // Convert user to boolean with !!
+      const accessForbidden = !requireAuth && Boolean(user);
       
       // Set shouldNavigate to a boolean value
       setShouldNavigate(accessRequired || accessForbidden);
