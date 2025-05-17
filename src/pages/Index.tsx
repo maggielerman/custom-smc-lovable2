@@ -1,6 +1,5 @@
-
 import HeroSection from "@/components/HeroSection";
-import BookTypes from "@/components/BookTypes";
+// import BookTypes from "@/components/BookTypes";
 import TestimonialSection from "@/components/TestimonialSection";
 import HowItWorks from "@/components/HowItWorks";
 import FAQSection from "@/components/FAQSection";
@@ -13,7 +12,7 @@ const Index = () => {
       <Navbar />
       <main className="flex-grow">
         <HeroSection />
-        <BookTypes />
+        {/* <BookTypes /> */}
         <HowItWorks />
         <TestimonialSection />
         <FAQSection />

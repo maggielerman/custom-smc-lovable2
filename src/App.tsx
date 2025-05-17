@@ -18,6 +18,8 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import { useEffect } from "react";
 import { supabaseClient } from "./lib/supabase";
 import { toast } from "sonner";
+import FAQ from "./pages/FAQ";
+import About from "./pages/About";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +58,8 @@ const AppContent = () => {
       
       {/* Catch-all route */}
       <Route path="*" element={<NotFound />} />
+      <Route path="/faq" element={<FAQ />} />
+      <Route path="/about" element={<About />} />
     </Routes>
   );
 };

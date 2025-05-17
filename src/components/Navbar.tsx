@@ -47,14 +47,14 @@ const Navbar = () => {
           <Link to="/how-it-works" className="text-gray-600 hover:text-primary transition-colors">
             How It Works
           </Link>
-          <Link to="/book-types" className="text-gray-600 hover:text-primary transition-colors">
-            Book Types
-          </Link>
           <Link to="/pricing" className="text-gray-600 hover:text-primary transition-colors">
             Pricing
           </Link>
           <Link to="/faq" className="text-gray-600 hover:text-primary transition-colors">
             FAQ
+          </Link>
+          <Link to="/about" className="text-gray-600 hover:text-primary transition-colors">
+            About Us
           </Link>
 
           {/* Add Cart Icon */}
@@ -122,13 +122,6 @@ const Navbar = () => {
                 How It Works
               </Link>
               <Link
-                to="/book-types"
-                className="text-lg font-medium"
-                onClick={() => setIsOpen(false)}
-              >
-                Book Types
-              </Link>
-              <Link
                 to="/pricing"
                 className="text-lg font-medium"
                 onClick={() => setIsOpen(false)}
@@ -141,6 +134,13 @@ const Navbar = () => {
                 onClick={() => setIsOpen(false)}
               >
                 FAQ
+              </Link>
+              <Link
+                to="/about"
+                className="text-lg font-medium"
+                onClick={() => setIsOpen(false)}
+              >
+                About Us
               </Link>
               <Link
                 to="/cart"

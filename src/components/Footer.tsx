@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -17,7 +16,7 @@ const Footer = () => {
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-wider">Books</h3>
             <ul className="mt-4 space-y-2">
-              <li>
+              {/* <li>
                 <Link to="/book-types/donor-egg" className="text-sm text-gray-600 hover:text-primary">
                   Donor Egg Stories
                 </Link>
@@ -36,7 +35,7 @@ const Footer = () => {
                 <Link to="/book-types/ivf" className="text-sm text-gray-600 hover:text-primary">
                   IVF Journey Stories
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
 
