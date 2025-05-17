@@ -21,7 +21,7 @@ export default function AuthGuard({
     // Only determine if we should redirect after loading is complete
     if (!isLoading) {
       const accessRequired = requireAuth && !user;
-      const accessForbidden = !requireAuth && user;
+      const accessForbidden = !requireAuth && !!user; // Convert user to boolean with !!
       
       // Set shouldNavigate to a boolean value
       setShouldNavigate(accessRequired || accessForbidden);
