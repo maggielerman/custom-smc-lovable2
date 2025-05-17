@@ -22,6 +22,8 @@ export default function AuthGuard({
     if (!isLoading) {
       const accessRequired = requireAuth && !user;
       const accessForbidden = !requireAuth && user;
+      
+      // Set shouldNavigate to a boolean value
       setShouldNavigate(accessRequired || accessForbidden);
     }
   }, [user, isLoading, requireAuth]);
