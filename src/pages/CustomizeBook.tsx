@@ -22,6 +22,8 @@ import StorySelection from "@/components/book-customization/StorySelection";
 import CustomerReviews from "@/components/book-customization/CustomerReviews";
 import StoryNotFound from "@/components/book-customization/StoryNotFound";
 import BookCustomizationFlow from "@/components/book-customization/BookCustomizationFlow";
+import { useBookData } from "@/hooks/useBookData";
+import { useBookActions } from "@/hooks/useBookActions";
 
 const CustomizeBook = () => {
   const { templateId } = useParams();
@@ -33,19 +35,8 @@ const CustomizeBook = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [filter, setFilter] = useState({ donor_process: '', art_process: '', family_structure: '' });
   const [selectedStory, setSelectedStory] = useState<BookTemplate | null>(null);
+  const { bookData, setBookData, updateField } = useBookData();
 
-  // Book customization data
-  const [bookData, setBookData] = useState({
-    title: "",
-    familyStructure: "",
-    familyMembers: [],
-    childName: "",
-    childAge: "",
-    childGender: "",
-    selectedIllustrations: {},
-    dedication: "",
-  });
-  
   // Define the steps for the customization process
   const steps = [
     { label: "Family Structure", icon: <Users className="h-5 w-5" /> },
@@ -82,22 +73,10 @@ const CustomizeBook = () => {
             'selectedIllustrations' in obj &&
             'dedication' in obj;
           if (typeof data.content === 'object' && !Array.isArray(data.content) && isValidBookData(data.content)) {
-            setBookData(data.content as typeof bookData);
+            setSelectedStory(data.content as BookTemplate);
           } else {
-            setBookData({
-              title: "",
-              familyStructure: "",
-              familyMembers: [],
-              childName: "",
-              childAge: "",
-              childGender: "",
-              selectedIllustrations: {},
-              dedication: "",
-            });
+            setSelectedStory(null);
           }
-          // Set selectedStory based on template_id
-          const found = DUMMY_STORIES.find(story => story.id === data.template_id);
-          setSelectedStory(found || null);
         }
         setLoading(false);
       };
@@ -121,83 +100,16 @@ const CustomizeBook = () => {
     }
   };
 
-  const handleUpdateField = (field: string, value: any) => {
-    setBookData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const handleSave = async (publish = false) => {
-    if (!user) {
-      toast("Please login to save your book");
-      navigate("/login", { state: { redirectTo: window.location.pathname } });
-      return;
-    }
-
-    try {
-      setSaving(true);
-      const book = {
-        title: bookData.title || selectedStory?.name || "Untitled Book",
-        content: bookData,
-        template_id: selectedStory?.id,
-        user_id: user.id,
-        published: publish,
-      };
-      let data, error;
-      if (bookId) {
-        // Update existing book
-        ({ data, error } = await supabaseClient
-          .from("books")
-          .update({ ...book, updated_at: new Date().toISOString() })
-          .eq("id", bookId)
-          .select()
-          .single());
-      } else {
-        // Insert new book
-        ({ data, error } = await supabaseClient
-          .from("books")
-          .insert(book)
-          .select()
-          .single());
-      }
-      if (error) throw error;
-      toast.success(
-        publish ? "Book published successfully!" : "Draft saved successfully!"
-      );
-      if (!publish) {
-        navigate("/");
-      }
-    } catch (error: any) {
-      console.error("Error saving book:", error);
-      toast.error("Failed to save book", { description: error?.message || String(error) });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleAddToCart = () => {
-    if (!selectedStory) return;
-    
-    // Create book item for cart
-    const bookItem = {
-      id: crypto.randomUUID(), // Generate temporary ID for non-saved books
-      title: bookData.title || selectedStory.name,
-      price: 29.99, // Default price
-      coverImageUrl: selectedStory.thumbnail_url,
-      quantity: 1
-    };
-    
-    addItem(bookItem);
-    toast.success(`${bookItem.title} added to cart`);
-  };
-
-  const handleBuyNow = () => {
-    // First add to cart
-    handleAddToCart();
-    // Then navigate to cart
-    navigate("/cart");
-  };
+  const { handleSave, handleAddToCart, handleBuyNow } = useBookActions({
+    user,
+    selectedStory,
+    bookData,
+    bookId,
+    navigate,
+    addItem,
+    toast,
+    setSaving,
+  });
 
   useEffect(() => {
     if (templateId) {
@@ -212,6 +124,20 @@ const CustomizeBook = () => {
       setLoading(false);
     }
   }, [templateId]);
+
+  const handleSelectStory = (story: BookTemplate) => {
+    setSelectedStory(story);
+    setBookData({
+      title: "",
+      familyStructure: "",
+      familyMembers: [],
+      childName: "",
+      childAge: "",
+      childGender: "",
+      selectedIllustrations: {},
+      dedication: "",
+    });
+  };
 
   if (!selectedStory && !loading) {
     const filteredStories = DUMMY_STORIES.filter(story =>
@@ -265,7 +191,7 @@ const CustomizeBook = () => {
                   </div>
                   <h2 className="text-lg font-semibold mb-2">{story.name}</h2>
                   <p className="text-sm text-muted-foreground mb-4 text-center">{story.description}</p>
-                  <Button onClick={() => setSelectedStory(story)} className="mt-auto">Select</Button>
+                  <Button onClick={() => handleSelectStory(story)} className="mt-auto">Select</Button>
                 </div>
               ))}
               {filteredStories.length === 0 && (
@@ -286,13 +212,13 @@ const CustomizeBook = () => {
   const template = selectedStory;
 
   const book = {
-    title: `${bookData.childName || "Your Child"}’s Story — ${(selectedStory as any)?.family_structure || "Family"} Book` +
+    title: `${selectedStory?.name || "Your Child"}’s Story — ${(selectedStory as any)?.family_structure || "Family"} Book` +
       " | Personalized Children's Book | DonorBookies",
     coverImageUrl:
       selectedStory?.thumbnail_url || "/placeholder.svg",
     description:
       `A fully personalized ${(selectedStory as any)?.family_structure?.toLowerCase() || "family"} storybook for ${
-        bookData.childName || "your child"
+        selectedStory?.name || "your child"
       }. Customize names, appearances, and your unique journey. Perfect for donor-conceived, IVF, and diverse families. A unique, heartfelt gift!`,
     sku: `BOOK-${selectedStory?.id || "SKU"}`,
     price: 29.99, // or your dynamic price
@@ -349,7 +275,7 @@ const CustomizeBook = () => {
                   This <strong>personalized children's book</strong> lets you customize names, appearances, family structure, and your unique journey. Perfect for {template.family_structure} and donor-conceived families. A unique, heartfelt gift!
                 </>
               ) : (
-                <>Create a <strong>fully personalized children's book</strong> for {bookData.childName || "your child"}. Customize names, appearances, family structure, and your unique journey. Perfect for donor-conceived, IVF, and diverse families. A unique, heartfelt gift!</>
+                <>Create a <strong>fully personalized children's book</strong> for {selectedStory?.name || "your child"}. Customize names, appearances, family structure, and your unique journey. Perfect for donor-conceived, IVF, and diverse families. A unique, heartfelt gift!</>
               )}
             </p>
           </div>
@@ -373,7 +299,7 @@ const CustomizeBook = () => {
               handleBuyNow={handleBuyNow}
               handleBack={handleBack}
               handleNext={handleNext}
-              template={template}
+              template={selectedStory}
             />
           </div>
           <div className="mt-16">
