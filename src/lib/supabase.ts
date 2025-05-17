@@ -33,9 +33,10 @@ export type Database = {
           id: string
           name: string
           description: string
-          thumbnail_url: string
+          thumbnail_url: string | null
           pages: number
           age_range: string
+          created_at: string
         }
       }
       profiles: {

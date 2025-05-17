@@ -16,9 +16,18 @@ type BookTemplate = {
   id: string;
   name: string;
   description: string;
-  thumbnail_url: string;
+  thumbnail_url: string | null;
   pages: number;
   age_range: string;
+};
+
+type Book = {
+  id: string;
+  title: string;
+  content: any;
+  template_id: string;
+  published: boolean;
+  cover_image_url: string | null;
 };
 
 const BookEditor = () => {
