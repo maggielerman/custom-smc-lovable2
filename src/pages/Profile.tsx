@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabaseClient } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { LogIn } from "lucide-react";
 
 type Profile = {
   id: string;
@@ -18,7 +19,7 @@ type Profile = {
 };
 
 const Profile = () => {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -95,7 +96,42 @@ const Profile = () => {
     return user?.email?.substring(0, 2).toUpperCase() || "U";
   };
 
-  if (!user) return null;
+  // Login prompt component
+  const LoginPrompt = () => (
+    <div className="flex flex-col items-center justify-center py-12 px-4">
+      <h2 className="text-2xl font-bold mb-4">Sign In to View Your Profile</h2>
+      <p className="text-center text-muted-foreground mb-6">
+        You need to be signed in to view and edit your profile.
+      </p>
+      <Button asChild>
+        <Link to="/login" className="flex items-center gap-2">
+          <LogIn size={18} />
+          <span>Sign In</span>
+        </Link>
+      </Button>
+    </div>
+  );
+
+  // Show loading state while authentication is being checked
+  if (isLoading) {
+    return (
+      <div className="container max-w-3xl py-10">
+        <div className="flex justify-center items-center min-h-[300px]">
+          <div className="animate-pulse text-xl">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login prompt if user is not authenticated
+  if (!user) {
+    return (
+      <div className="container max-w-3xl py-10">
+        <h1 className="text-3xl font-bold mb-8">Your Profile</h1>
+        <LoginPrompt />
+      </div>
+    );
+  }
 
   return (
     <div className="container max-w-3xl py-10">

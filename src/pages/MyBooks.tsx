@@ -1,14 +1,55 @@
 
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BookOpen, FileText } from "lucide-react";
+import { BookOpen, FileText, LogIn } from "lucide-react";
 import DraftsList from "@/components/DraftsList";
+import { useAuth } from "@/hooks/useAuth";
 
 const MyBooks = () => {
   const [activeTab, setActiveTab] = useState("all");
+  const { user, isLoading } = useAuth();
+  const navigate = useNavigate();
 
+  // Simple content to show when user is not logged in
+  const LoginPrompt = () => (
+    <div className="flex flex-col items-center justify-center py-12 px-4">
+      <h2 className="text-2xl font-bold mb-4">Sign In to View Your Books</h2>
+      <p className="text-center text-muted-foreground mb-6">
+        You need to be signed in to create and manage your books.
+      </p>
+      <Button asChild>
+        <Link to="/login" className="flex items-center gap-2">
+          <LogIn size={18} />
+          <span>Sign In</span>
+        </Link>
+      </Button>
+    </div>
+  );
+
+  // Show loading state while authentication is being checked
+  if (isLoading) {
+    return (
+      <div className="container py-10">
+        <div className="flex justify-center items-center min-h-[300px]">
+          <div className="animate-pulse text-xl">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login prompt if user is not authenticated
+  if (!user) {
+    return (
+      <div className="container py-10">
+        <h1 className="text-3xl font-bold mb-8">My Books</h1>
+        <LoginPrompt />
+      </div>
+    );
+  }
+
+  // Main content for authenticated users
   return (
     <div className="container py-10">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">

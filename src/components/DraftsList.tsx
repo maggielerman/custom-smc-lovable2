@@ -30,7 +30,11 @@ const DraftsList = ({ published }: DraftsListProps) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) return;
+    // If no user is logged in, just set loading to false and return
+    if (!user) {
+      setLoading(false);
+      return;
+    }
     
     const fetchBooks = async () => {
       try {
@@ -83,6 +87,15 @@ const DraftsList = ({ published }: DraftsListProps) => {
       toast.error("Failed to delete book");
     }
   };
+
+  // If there's no user, show a simple message
+  if (!user) {
+    return (
+      <div className="text-center py-6">
+        <p className="text-muted-foreground">Please sign in to view your books.</p>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

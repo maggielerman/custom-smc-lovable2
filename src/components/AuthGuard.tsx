@@ -1,7 +1,6 @@
 
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { useEffect, useState } from "react";
 
 interface AuthGuardProps {
   requireAuth?: boolean;
@@ -14,20 +13,6 @@ export default function AuthGuard({
 }: AuthGuardProps) {
   const { user, isLoading } = useAuth();
   const location = useLocation();
-  const [shouldNavigate, setShouldNavigate] = useState(false);
-
-  // Use effect to prevent immediate redirect and avoid redirect loops
-  useEffect(() => {
-    // Only determine if we should redirect after loading is complete
-    if (!isLoading) {
-      // Calculate whether access is required or forbidden based on current state
-      const accessRequired = requireAuth && !user;
-      const accessForbidden = !requireAuth && Boolean(user);
-      
-      // Set shouldNavigate to a boolean value
-      setShouldNavigate(accessRequired || accessForbidden);
-    }
-  }, [user, isLoading, requireAuth]);
 
   // Wait while authentication state is being checked
   if (isLoading) {
@@ -38,10 +23,11 @@ export default function AuthGuard({
     );
   }
 
-  // Only redirect if we've determined we should after loading is complete
-  if (shouldNavigate) {
-    console.log(`Redirecting from ${location.pathname} to ${redirectTo}, auth required: ${requireAuth}, user exists: ${!!user}`);
-    return <Navigate to={redirectTo} state={{ from: location.pathname }} replace />;
+  // For login/signup pages (requireAuth=false):
+  // If user is logged in, redirect to home
+  if (!requireAuth && user) {
+    console.log(`User is logged in, redirecting from ${location.pathname} to ${redirectTo}`);
+    return <Navigate to={redirectTo} replace />;
   }
 
   // Render children if authentication conditions are met

@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -11,13 +12,48 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BookOpen, Settings, FileText } from "lucide-react";
+import { BookOpen, Settings, FileText, LogIn } from "lucide-react";
 import DraftsList from "@/components/DraftsList";
 
 const Account = () => {
-  const { user, signOut } = useAuth();
+  const { user, signOut, isLoading } = useAuth();
 
-  if (!user) return null;
+  // Login prompt component
+  const LoginPrompt = () => (
+    <div className="flex flex-col items-center justify-center py-12 px-4">
+      <h2 className="text-2xl font-bold mb-4">Sign In to Access Your Account</h2>
+      <p className="text-center text-muted-foreground mb-6">
+        You need to be signed in to view and manage your account settings.
+      </p>
+      <Button asChild>
+        <Link to="/login" className="flex items-center gap-2">
+          <LogIn size={18} />
+          <span>Sign In</span>
+        </Link>
+      </Button>
+    </div>
+  );
+
+  // Show loading state while authentication is being checked
+  if (isLoading) {
+    return (
+      <div className="container py-10">
+        <div className="flex justify-center items-center min-h-[300px]">
+          <div className="animate-pulse text-xl">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login prompt if user is not authenticated
+  if (!user) {
+    return (
+      <div className="container py-10">
+        <h1 className="text-3xl font-bold mb-8">Your Account</h1>
+        <LoginPrompt />
+      </div>
+    );
+  }
 
   return (
     <div className="container py-10">

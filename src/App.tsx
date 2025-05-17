@@ -47,15 +47,13 @@ const AppContent = () => {
         <Route path="/signup" element={<Signup />} />
       </Route>
       
-      {/* Protected routes - only accessible when logged in */}
-      <Route element={<AuthGuard requireAuth={true} redirectTo="/login" />}>
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/account" element={<Account />} />
-        <Route path="/my-books" element={<MyBooks />} />
-        <Route path="/books/new" element={<BookEditor />} />
-        <Route path="/books/:id/edit" element={<BookEditor />} />
-        <Route path="/customize/:templateId" element={<CustomizeBook />} />
-      </Route>
+      {/* Protected routes - directly rendered with internal auth checks */}
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/account" element={<Account />} />
+      <Route path="/my-books" element={<MyBooks />} />
+      <Route path="/books/new" element={<BookEditor />} />
+      <Route path="/books/:id/edit" element={<BookEditor />} />
+      <Route path="/customize/:templateId" element={<CustomizeBook />} />
       
       {/* Catch-all route */}
       <Route path="*" element={<NotFound />} />
