@@ -6,7 +6,7 @@ import FamilyMembersStep from "@/components/book-customization/FamilyMembersStep
 import ChildDetailsStep from "@/components/book-customization/ChildDetailsStep";
 import IllustrationStep from "@/components/book-customization/IllustrationStep";
 import ReviewStep from "@/components/book-customization/ReviewStep";
-import { ChevronLeft, ChevronRight, Save, ShoppingCart } from "lucide-react";
+import { ChevronRight, Save, ShoppingCart } from "lucide-react";
 
 interface BookCustomizationFlowProps {
   bookData: any;
@@ -58,7 +58,6 @@ const BookCustomizationFlow: React.FC<BookCustomizationFlowProps> = ({
                 onChange={(value) => handleUpdateField("familyStructure", value)}
               />
             )}
-
             {currentStep === 1 && (
               <FamilyMembersStep
                 familyStructure={bookData.familyStructure}
@@ -66,7 +65,6 @@ const BookCustomizationFlow: React.FC<BookCustomizationFlowProps> = ({
                 onChange={(value) => handleUpdateField("familyMembers", value)}
               />
             )}
-
             {currentStep === 2 && (
               <ChildDetailsStep
                 childName={bookData.childName}
@@ -77,7 +75,6 @@ const BookCustomizationFlow: React.FC<BookCustomizationFlowProps> = ({
                 onGenderChange={(value) => handleUpdateField("childGender", value)}
               />
             )}
-
             {currentStep === 3 && (
               <IllustrationStep
                 selectedIllustrations={bookData.selectedIllustrations}
@@ -85,7 +82,6 @@ const BookCustomizationFlow: React.FC<BookCustomizationFlowProps> = ({
                 bookType={template.name}
               />
             )}
-
             {currentStep === 4 && (
               <>
                 <div className="flex items-center mb-4">
@@ -102,7 +98,6 @@ const BookCustomizationFlow: React.FC<BookCustomizationFlowProps> = ({
             )}
           </>
         )}
-
         <div className="flex justify-between mt-12">
           <Button
             variant="outline"
@@ -111,7 +106,6 @@ const BookCustomizationFlow: React.FC<BookCustomizationFlowProps> = ({
           >
             {currentStep === 0 ? "Cancel" : "Back"}
           </Button>
-
           <div className="space-x-3">
             {currentStep === steps.length - 1 ? (
               <>
