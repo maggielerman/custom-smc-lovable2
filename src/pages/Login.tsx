@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +13,10 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const { signIn } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Get the redirect URL from location state or default to "/"
+  const from = location.state?.from || "/";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,9 +29,11 @@ export default function Login() {
     try {
       setIsLoading(true);
       await signIn(email, password);
-      // AuthProvider will handle navigation on successful login
+      // After successful login, navigate to the intended page or home
+      navigate(from, { replace: true });
     } catch (error) {
       console.error("Login error:", error);
+      // Error handling is done in the signIn function
     } finally {
       setIsLoading(false);
     }

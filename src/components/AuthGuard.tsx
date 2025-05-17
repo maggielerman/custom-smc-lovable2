@@ -1,5 +1,5 @@
 
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
 interface AuthGuardProps {
@@ -12,6 +12,7 @@ export default function AuthGuard({
   redirectTo = requireAuth ? "/login" : "/"
 }: AuthGuardProps) {
   const { user, isLoading } = useAuth();
+  const location = useLocation();
 
   // Wait while authentication state is being checked
   if (isLoading) {
@@ -27,7 +28,7 @@ export default function AuthGuard({
   const shouldRedirect = requireAuth ? !user : !!user;
 
   if (shouldRedirect) {
-    return <Navigate to={redirectTo} replace />;
+    return <Navigate to={redirectTo} replace state={{ from: location.pathname }} />;
   }
 
   // Render children if authentication conditions are met

@@ -1,16 +1,15 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react'
 import { User, Session } from '@supabase/supabase-js'
-import { supabaseClient, getSupabaseClient } from '@/lib/supabase'
+import { supabaseClient } from '@/lib/supabase'
 import { useNavigate } from 'react-router-dom'
-import { useToast } from '@/hooks/use-toast'
-import { toast as sonnerToast } from 'sonner'
+import { toast } from 'sonner'
 
 type AuthContextType = {
   user: User | null
   session: Session | null
   isLoading: boolean
   signIn: (email: string, password: string) => Promise<void>
-  signUp: (email: string, password: string) => Promise<void>  // This stays as Promise<void>
+  signUp: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
   isSupabaseConnected: boolean
 }
@@ -23,7 +22,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isSupabaseConnected, setIsSupabaseConnected] = useState(!!supabaseClient)
   const navigate = useNavigate()
-  const { toast } = useToast()
 
   useEffect(() => {
     const getSession = async () => {
@@ -35,6 +33,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
       
       try {
+        // Set up auth state listener FIRST
+        const { data: { subscription } } = supabaseClient.auth.onAuthStateChange(
+          (_event, session) => {
+            setSession(session)
+            setUser(session?.user ?? null)
+          }
+        )
+        
+        // THEN check for existing session
         const { data: { session }, error } = await supabaseClient.auth.getSession()
         
         if (error) {
@@ -43,6 +50,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         
         setSession(session)
         setUser(session?.user ?? null)
+        
+        return () => subscription.unsubscribe()
       } catch (error) {
         console.error('Failed to get session:', error)
       } finally {
@@ -51,15 +60,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     getSession()
-
-    if (supabaseClient) {
-      const { data: { subscription } } = supabaseClient.auth.onAuthStateChange((_event, session) => {
-        setSession(session)
-        setUser(session?.user ?? null)
-      })
-
-      return () => subscription.unsubscribe()
-    }
   }, [])
 
   const signIn = async (email: string, password: string) => {
@@ -75,28 +75,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       if (error) throw error
       
-      sonnerToast.success(
+      toast.success(
         "Welcome back!",
         {
           description: "You have successfully signed in.",
         }
       )
-      
-      navigate('/')
     } catch (error: any) {
       console.error('Sign in error:', error)
       
       // Handle specific error cases
       if (error.message.includes('Invalid login')) {
-        sonnerToast.error("Invalid login credentials", {
+        toast.error("Invalid login credentials", {
           description: "The email or password you entered is incorrect.",
         })
       } else if (error.message.includes('Email not confirmed')) {
-        sonnerToast.error("Email not verified", {
+        toast.error("Email not verified", {
           description: "Please check your email and verify your account before signing in.",
         })
       } else {
-        sonnerToast.error("Sign in failed", {
+        toast.error("Sign in failed", {
           description: error.message || "Please try again",
         })
       }
@@ -118,7 +116,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       if (error) throw error
       
-      sonnerToast.success(
+      toast.success(
         "Account created!",
         {
           description: "Please check your email for verification.",
@@ -132,11 +130,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       // Handle specific error cases
       if (error.message.includes('already registered')) {
-        sonnerToast.error("Email already registered", {
+        toast.error("Email already registered", {
           description: "This email is already in use. Try signing in instead.",
         })
       } else {
-        sonnerToast.error("Sign up failed", {
+        toast.error("Sign up failed", {
           description: error.message || "Please try again",
         })
       }
@@ -154,10 +152,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const { error } = await supabaseClient.auth.signOut()
       if (error) throw error
       
-      sonnerToast.success("Signed out successfully")
+      toast.success("Signed out successfully")
       navigate('/')
     } catch (error: any) {
-      sonnerToast.error("Sign out failed", {
+      toast.error("Sign out failed", {
         description: error.message || "Please try again",
       })
       console.error('Sign out error:', error)

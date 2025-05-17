@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
@@ -18,7 +17,7 @@ const HeroSection = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link to="/book-types">
-                <Button size="lg" className="h-12 px-8">Explore Book Types</Button>
+                <Button size="lg" className="h-12 px-8">Start Creating Book</Button>
               </Link>
               <Link to="/how-it-works">
                 <Button 
