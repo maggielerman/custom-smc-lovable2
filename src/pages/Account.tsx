@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -14,9 +13,65 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BookOpen, Settings, FileText, LogIn } from "lucide-react";
 import DraftsList from "@/components/DraftsList";
+import { useNavigate } from "react-router-dom";
+import { supabaseClient } from "@/lib/supabase";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const Account = () => {
   const { user, signOut, isLoading } = useAuth();
+  const navigate = useNavigate();
+  const [profile, setProfile] = useState(null);
+  const [username, setUsername] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [profileLoading, setProfileLoading] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchProfile = async () => {
+      try {
+        setProfileLoading(true);
+        const { data, error } = await supabaseClient
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id)
+          .maybeSingle();
+        if (error) throw error;
+        if (data) {
+          setProfile(data);
+          setUsername(data.username || "");
+          setDisplayName(data.display_name || "");
+        }
+      } catch (error) {
+        // handle error
+      } finally {
+        setProfileLoading(false);
+      }
+    };
+    fetchProfile();
+  }, [user]);
+
+  const updateProfile = async () => {
+    if (!user) return;
+    try {
+      setProfileLoading(true);
+      const { error } = await supabaseClient
+        .from("profiles")
+        .update({
+          username,
+          display_name: displayName,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", user.id);
+      if (error) throw error;
+      setProfile({ ...profile, username, display_name: displayName });
+    } catch (error) {
+      // handle error
+    } finally {
+      setProfileLoading(false);
+    }
+  };
 
   // Login prompt component
   const LoginPrompt = () => (
@@ -65,7 +120,7 @@ const Account = () => {
       </div>
 
       <Tabs defaultValue="drafts" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 mb-8">
+        <TabsList className="grid w-full grid-cols-4 mb-8">
           <TabsTrigger value="drafts" className="flex gap-2 items-center">
             <FileText className="h-4 w-4" />
             <span className="hidden sm:inline">Saved Drafts</span>
@@ -79,6 +134,14 @@ const Account = () => {
           <TabsTrigger value="settings" className="flex gap-2 items-center">
             <Settings className="h-4 w-4" />
             <span>Settings</span>
+          </TabsTrigger>
+          <TabsTrigger value="profile" className="flex gap-2 items-center">
+            <Avatar className="h-4 w-4">
+              <AvatarFallback>
+                {user.user_metadata.name?.split(" ").map((word) => word[0]).join("")}
+              </AvatarFallback>
+            </Avatar>
+            <span>Profile</span>
           </TabsTrigger>
         </TabsList>
 
@@ -95,7 +158,7 @@ const Account = () => {
             </CardContent>
             <CardFooter>
               <Button asChild>
-                <Link to="/books/new">Create New Book</Link>
+                <Link to="/customize/">Create New Book</Link>
               </Button>
             </CardFooter>
           </Card>
@@ -129,9 +192,6 @@ const Account = () => {
                 <p className="text-sm text-muted-foreground">
                   Update your personal information
                 </p>
-                <Button variant="outline" className="mt-2" asChild>
-                  <Link to="/profile">Edit Profile</Link>
-                </Button>
               </div>
 
               <div className="pt-4 border-t">
@@ -144,6 +204,42 @@ const Account = () => {
                 </Button>
               </div>
             </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="profile">
+          <Card>
+            <CardHeader>
+              <CardTitle>Profile</CardTitle>
+              <CardDescription>Manage your profile information.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center gap-4">
+                <Avatar className="w-16 h-16">
+                  <AvatarFallback className="text-xl">{displayName ? displayName.substring(0, 2).toUpperCase() : user.email.substring(0, 2).toUpperCase()}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <div className="font-semibold">{displayName || user.email}</div>
+                  <div className="text-muted-foreground text-sm">{user.email}</div>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" value={user.email || ""} disabled className="bg-muted" />
+                <p className="text-xs text-muted-foreground">Your email cannot be changed</p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="username">Username</Label>
+                <Input id="username" value={username} onChange={e => setUsername(e.target.value)} placeholder="Enter a username" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="displayName">Display Name</Label>
+                <Input id="displayName" value={displayName} onChange={e => setDisplayName(e.target.value)} placeholder="Enter your display name" />
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button onClick={updateProfile} disabled={profileLoading}>{profileLoading ? "Saving..." : "Save Changes"}</Button>
+            </CardFooter>
           </Card>
         </TabsContent>
       </Tabs>

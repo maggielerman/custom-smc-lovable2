@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { BookOpen, Users, Palette, Image, Zap, CheckCircle } from "lucide-react";
@@ -60,7 +59,7 @@ const HowItWorksPage = () => {
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <Button asChild size="lg" className="text-lg px-8">
-                  <Link to="/book-types">Start Creating</Link>
+                  <Link to="/customize/">Start Creating</Link>
                 </Button>
                 <Button asChild variant="outline" size="lg" className="text-lg px-8">
                   <a href="#customization-process">Learn More</a>
@@ -186,7 +185,7 @@ const HowItWorksPage = () => {
             
             <div className="mt-12 text-center">
               <Button asChild size="lg">
-                <Link to="/book-types">Create Your Book</Link>
+                <Link to="/customize/">Create Your Book</Link>
               </Button>
             </div>
           </div>
@@ -238,7 +237,7 @@ const HowItWorksPage = () => {
               Start your personalized journey today and create a book your family will treasure for years to come.
             </p>
             <Button asChild size="lg" variant="secondary" className="text-lg px-8">
-              <Link to="/book-types">Start Creating Now</Link>
+              <Link to="/customize/">Start Creating Now</Link>
             </Button>
           </div>
         </section>

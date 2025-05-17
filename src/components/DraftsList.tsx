@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -132,7 +131,7 @@ const DraftsList = ({ published }: DraftsListProps) => {
           {published ? "You haven't published any books yet." : "You don't have any drafts yet."}
         </p>
         <Button asChild>
-          <Link to="/books/new">Create Your First Book</Link>
+          <Link to="/customize/">Create Your First Book</Link>
         </Button>
       </div>
     );

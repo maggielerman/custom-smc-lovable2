@@ -1,4 +1,3 @@
-
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
@@ -42,7 +41,7 @@ const PaymentSuccess = () => {
           )}
 
           <div className="space-x-4">
-            <Button onClick={() => navigate("/my-books")}>
+            <Button onClick={() => navigate("/")}>
               Go to My Books
             </Button>
             <Button variant="outline" onClick={() => navigate("/")}>

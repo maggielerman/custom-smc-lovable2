@@ -20,11 +20,11 @@ const HeroSection = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               {user ? (
-                <Link to="/books/new">
+                <Link to="/customize/">
                   <Button size="lg" className="h-12 px-8">Start Creating Book</Button>
                 </Link>
               ) : (
-                <Link to="/login" state={{ from: "/books/new" }}>
+                <Link to="/login" state={{ from: "/customize/" }}>
                   <Button size="lg" className="h-12 px-8">Start Creating Book</Button>
                 </Link>
               )}

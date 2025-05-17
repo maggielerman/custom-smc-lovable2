@@ -1,19 +1,15 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { CartProvider } from "@/contexts/CartContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Profile from "./pages/Profile";
 import Account from "./pages/Account";
-import MyBooks from "./pages/MyBooks";
-import BookEditor from "./pages/BookEditor";
 import CustomizeBook from "./pages/CustomizeBook";
 import HowItWorksPage from "./pages/HowItWorksPage";
 import AuthGuard from "./components/AuthGuard";
@@ -53,11 +49,9 @@ const AppContent = () => {
       </Route>
       
       {/* Protected routes - directly rendered with internal auth checks */}
-      <Route path="/profile" element={<Profile />} />
       <Route path="/account" element={<Account />} />
-      <Route path="/my-books" element={<MyBooks />} />
-      <Route path="/books/new" element={<BookEditor />} />
-      <Route path="/books/:id/edit" element={<BookEditor />} />
+      <Route path="/books/new" element={<Navigate to="/customize/" replace />} />
+      <Route path="/customize/" element={<CustomizeBook />} />
       <Route path="/customize/:templateId" element={<CustomizeBook />} />
       
       {/* Catch-all route */}

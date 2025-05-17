@@ -1,4 +1,3 @@
-
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -80,7 +79,7 @@ const Cart = () => {
             <p className="text-muted-foreground mb-8">
               Add some books to your cart to continue.
             </p>
-            <Button onClick={() => navigate("/my-books")}>
+            <Button onClick={() => navigate("/")}>
               Browse Books
             </Button>
           </div>

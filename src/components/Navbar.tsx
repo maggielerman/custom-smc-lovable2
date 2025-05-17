@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -78,15 +77,9 @@ const Navbar = () => {
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link to="/my-books" className="w-full flex items-center">
-                    <BookOpen className="w-4 h-4 mr-2" />
-                    <span>My Books</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/profile" className="w-full flex items-center">
+                  <Link to="/account" className="w-full flex items-center">
                     <User className="w-4 h-4 mr-2" />
-                    <span>Profile</span>
+                    <span>Account</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -160,18 +153,11 @@ const Navbar = () => {
               {user ? (
                 <>
                   <Link
-                    to="/my-books"
+                    to="/account"
                     className="text-lg font-medium"
                     onClick={() => setIsOpen(false)}
                   >
-                    My Books
-                  </Link>
-                  <Link
-                    to="/profile"
-                    className="text-lg font-medium"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Profile
+                    Account
                   </Link>
                   <Button onClick={() => { signOut(); setIsOpen(false); }}>
                     Sign Out
