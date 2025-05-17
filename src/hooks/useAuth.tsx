@@ -1,4 +1,3 @@
-
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { supabaseClient, getSupabaseClient } from '@/lib/supabase'
@@ -11,7 +10,7 @@ type AuthContextType = {
   session: Session | null
   isLoading: boolean
   signIn: (email: string, password: string) => Promise<void>
-  signUp: (email: string, password: string) => Promise<void>
+  signUp: (email: string, password: string) => Promise<void>  // This stays as Promise<void>
   signOut: () => Promise<void>
   isSupabaseConnected: boolean
 }
@@ -126,7 +125,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
       )
       
-      return data
+      // Don't return data, just void to match the Promise<void> type
       
     } catch (error: any) {
       console.error('Sign up error:', error)
