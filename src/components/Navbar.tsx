@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import CartIndicator from "./CartIndicator";
 
 const Navbar = () => {
   const { user, signOut } = useAuth();
@@ -56,6 +57,9 @@ const Navbar = () => {
           <Link to="/faq" className="text-gray-600 hover:text-primary transition-colors">
             FAQ
           </Link>
+
+          {/* Add Cart Icon */}
+          <CartIndicator />
 
           {user ? (
             <DropdownMenu>
@@ -106,12 +110,15 @@ const Navbar = () => {
 
         {/* Mobile Menu Button */}
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild className="md:hidden">
-            <Button variant="ghost" size="icon">
-              <Menu className="h-6 w-6" />
-              <span className="sr-only">Toggle menu</span>
-            </Button>
-          </SheetTrigger>
+          <div className="flex items-center md:hidden">
+            <CartIndicator />
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu className="h-6 w-6" />
+                <span className="sr-only">Toggle menu</span>
+              </Button>
+            </SheetTrigger>
+          </div>
           <SheetContent side="right">
             <div className="flex flex-col space-y-4 mt-8">
               <Link
@@ -141,6 +148,13 @@ const Navbar = () => {
                 onClick={() => setIsOpen(false)}
               >
                 FAQ
+              </Link>
+              <Link
+                to="/cart"
+                className="text-lg font-medium"
+                onClick={() => setIsOpen(false)}
+              >
+                Cart
               </Link>
 
               {user ? (
