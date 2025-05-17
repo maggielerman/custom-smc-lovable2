@@ -61,13 +61,19 @@ const BookTypes = () => {
                 <h3 className="font-bold text-xl">{template.title}</h3>
                 <p className="mt-2 text-gray-600">{template.description}</p>
                 <div className="mt-4">
-                  <Link to={`/create/${template.id}`}>
+                  <Link to={`/customize/${template.id}`}>
                     <Button className="w-full">Start Creating</Button>
                   </Link>
                 </div>
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="mt-12 text-center">
+          <Link to="/how-it-works">
+            <Button variant="outline" size="lg">Learn How It Works</Button>
+          </Link>
         </div>
       </div>
     </section>

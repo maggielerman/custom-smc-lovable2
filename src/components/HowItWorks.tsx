@@ -1,5 +1,7 @@
 
 import { CheckCircle } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const steps = [
   {
@@ -89,6 +91,12 @@ const HowItWorks = () => {
                 <span className="text-gray-700">{feature}</span>
               </div>
             ))}
+          </div>
+          
+          <div className="mt-10 text-center">
+            <Link to="/how-it-works">
+              <Button size="lg">Learn More About the Process</Button>
+            </Link>
           </div>
         </div>
       </div>

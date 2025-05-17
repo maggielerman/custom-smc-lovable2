@@ -13,6 +13,8 @@ import Profile from "./pages/Profile";
 import Account from "./pages/Account";
 import MyBooks from "./pages/MyBooks";
 import BookEditor from "./pages/BookEditor";
+import CustomizeBook from "./pages/CustomizeBook";
+import HowItWorksPage from "./pages/HowItWorksPage";
 import AuthGuard from "./components/AuthGuard";
 import { useEffect } from "react";
 import { supabaseClient } from "./lib/supabase";
@@ -37,6 +39,7 @@ const AppContent = () => {
     <Routes>
       {/* Public routes */}
       <Route path="/" element={<Index />} />
+      <Route path="/how-it-works" element={<HowItWorksPage />} />
       
       {/* Auth routes - only accessible when logged out */}
       <Route element={<AuthGuard requireAuth={false} redirectTo="/" />}>
@@ -51,6 +54,7 @@ const AppContent = () => {
         <Route path="/my-books" element={<MyBooks />} />
         <Route path="/books/new" element={<BookEditor />} />
         <Route path="/books/:id/edit" element={<BookEditor />} />
+        <Route path="/customize/:templateId" element={<CustomizeBook />} />
       </Route>
       
       {/* Catch-all route */}
