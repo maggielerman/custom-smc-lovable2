@@ -41,11 +41,22 @@ export type Database = {
   }
 }
 
-// Important: The Supabase URL and anon key need to be configured via the Supabase integration
-// This code will work once the user has connected their project to Supabase
-export const supabaseClient = createClient<Database>(
-  import.meta.env.VITE_SUPABASE_URL || '',
-  import.meta.env.VITE_SUPABASE_ANON_KEY || ''
-)
+// Check if Supabase environment variables are available
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-export default supabaseClient
+// Create a placeholder client if environment variables aren't available
+export const supabaseClient = supabaseUrl && supabaseAnonKey 
+  ? createClient<Database>(supabaseUrl, supabaseAnonKey)
+  : null;
+
+// Helper function to safely use the Supabase client
+export const getSupabaseClient = () => {
+  if (!supabaseClient) {
+    console.error('Supabase client is not initialized. Please connect your project to Supabase.');
+    throw new Error('Supabase client is not initialized. Please connect your project to Supabase.');
+  }
+  return supabaseClient;
+};
+
+export default supabaseClient;
