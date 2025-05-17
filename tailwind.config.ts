@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -25,12 +26,32 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+          DEFAULT: '#8B5CF6',
+					foreground: '#FFFFFF',
+          '50': '#FAF5FF',
+          '100': '#F3E8FF',
+          '200': '#E9D5FF',
+          '300': '#D8B4FE',
+          '400': '#C084FC',
+          '500': '#A855F7',
+          '600': '#9333EA',
+          '700': '#7E22CE',
+          '800': '#6B21A8',
+          '900': '#581C87',
 				},
 				secondary: {
-					DEFAULT: 'hsl(var(--secondary))',
-					foreground: 'hsl(var(--secondary-foreground))'
+					DEFAULT: '#38BDF8',
+					foreground: '#FFFFFF',
+          '50': '#EFF6FF',
+          '100': '#DBEAFE',
+          '200': '#BFDBFE',
+          '300': '#93C5FD',
+          '400': '#60A5FA',
+          '500': '#3B82F6',
+          '600': '#2563EB',
+          '700': '#1D4ED8',
+          '800': '#1E40AF',
+          '900': '#1E3A8A',
 				},
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
@@ -70,25 +91,27 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
-				}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
+				},
+        'fade-in': {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' }
+        },
+        'float': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' }
+        }
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+        'fade-in': 'fade-in 0.5s ease-out',
+        'float': 'float 6s ease-in-out infinite'
 			}
 		}
 	},
