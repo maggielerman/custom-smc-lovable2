@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
+import { CartProvider } from "@/contexts/CartContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
@@ -16,6 +17,8 @@ import BookEditor from "./pages/BookEditor";
 import CustomizeBook from "./pages/CustomizeBook";
 import HowItWorksPage from "./pages/HowItWorksPage";
 import AuthGuard from "./components/AuthGuard";
+import Cart from "./pages/Cart";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import { useEffect } from "react";
 import { supabaseClient } from "./lib/supabase";
 import { toast } from "sonner";
@@ -40,6 +43,8 @@ const AppContent = () => {
       {/* Public routes */}
       <Route path="/" element={<Index />} />
       <Route path="/how-it-works" element={<HowItWorksPage />} />
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/payment-success" element={<PaymentSuccess />} />
       
       {/* Auth routes - only accessible when logged out */}
       <Route element={<AuthGuard requireAuth={false} redirectTo="/" />}>
@@ -68,7 +73,9 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <AppContent />
+          <CartProvider>
+            <AppContent />
+          </CartProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
