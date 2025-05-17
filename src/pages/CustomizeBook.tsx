@@ -16,52 +16,11 @@ import Footer from "@/components/Footer";
 import { useCart } from "@/contexts/CartContext";
 import { StructuredData } from "@/components/SEO/StructuredData";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-
-type BookTemplate = {
-  id: string;
-  name: string;
-  description: string;
-  thumbnail_url: string | null;
-  pages: number;
-  age_range: string;
-  family_structure: string;
-};
-
-const DUMMY_STORIES = [
-  {
-    id: 'b7e1c2a0-1234-4cde-8f2a-abcdef123456',
-    name: 'Two Moms, Sperm Donor',
-    description: 'A story for families with two moms, conceived via sperm donation.',
-    donor_process: 'sperm',
-    art_process: 'IVF',
-    family_structure: 'two moms',
-    thumbnail_url: null,
-    pages: 24,
-    age_range: '3-7',
-  },
-  {
-    id: 'c8f2d3b1-2345-4def-9a3b-bcdef2345678',
-    name: 'Single Dad, Egg Donor, Surrogacy',
-    description: 'A story for single dads who used an egg donor and a surrogate.',
-    donor_process: 'egg',
-    art_process: 'surrogacy',
-    family_structure: 'single dad',
-    thumbnail_url: null,
-    pages: 24,
-    age_range: '3-7',
-  },
-  {
-    id: 'd9e3f4c2-3456-4efa-ab4c-cdef34567890',
-    name: 'Mom and Dad, IVF',
-    description: 'A story for mom and dad families who used IVF.',
-    donor_process: 'none',
-    art_process: 'IVF',
-    family_structure: 'mom and dad',
-    thumbnail_url: null,
-    pages: 24,
-    age_range: '3-7',
-  },
-];
+import { BookTemplate, DUMMY_STORIES } from "@/lib/bookTemplates";
+import { sampleReviews, getAggregateRating, getProductSchema, getBookSchema } from "@/lib/bookSeo";
+import StorySelection from "@/components/book-customization/StorySelection";
+import CustomerReviews from "@/components/book-customization/CustomerReviews";
+import StoryNotFound from "@/components/book-customization/StoryNotFound";
 
 const CustomizeBook = () => {
   const { templateId } = useParams();
@@ -320,36 +279,7 @@ const CustomizeBook = () => {
   }
 
   if (templateId && !selectedStory && !loading) {
-    return (
-      <HelmetProvider>
-        <div className="flex flex-col min-h-screen">
-          <Helmet>
-            <title>Story Not Found | Personalized Children's Book | DonorBookies</title>
-            <meta name="description" content="The story template you are looking for does not exist." />
-            <link rel="canonical" href={`${window.location.origin}/customize/`} />
-            <meta property="og:title" content="Story Not Found | Personalized Children's Book | DonorBookies" />
-            <meta property="og:description" content="The story template you are looking for does not exist." />
-            <meta property="og:image" content={`${window.location.origin}/placeholder.svg`} />
-            <meta property="og:url" content={`${window.location.origin}/customize/`} />
-            <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:title" content="Story Not Found | Personalized Children's Book | DonorBookies" />
-            <meta name="twitter:description" content="The story template you are looking for does not exist." />
-            <meta name="twitter:image" content={`${window.location.origin}/placeholder.svg`} />
-          </Helmet>
-          <Navbar />
-          <main className="flex-grow container py-10 flex items-center justify-center">
-            <div className="text-center">
-              <h1 className="text-3xl font-bold mb-4">Story Not Found</h1>
-              <p className="text-muted-foreground mb-8">The story template you are looking for does not exist.</p>
-              <Button asChild>
-                <a href="/customize/">Back to Story Selection</a>
-              </Button>
-            </div>
-          </main>
-          <Footer />
-        </div>
-      </HelmetProvider>
-    );
+    return <StoryNotFound />;
   }
 
   const template = selectedStory;
@@ -374,102 +304,12 @@ const CustomizeBook = () => {
     familyStructure: (selectedStory as any)?.family_structure || "Family",
   };
 
-  // Add sample reviews and aggregate rating for SEO
-  const sampleReviews = [
-    {
-      author: "Emily R.",
-      rating: 5,
-      text: "Absolutely loved how we could personalize every detail. My daughter was thrilled to see herself in the story!",
-    },
-    {
-      author: "Carlos T.",
-      rating: 5,
-      text: "A beautiful, inclusive book for our two-dad family. The customization options made it truly ours.",
-    },
-    {
-      author: "Priya S.",
-      rating: 4,
-      text: "Great for explaining our IVF journey. The illustrations and story are so warm and personal.",
-    },
-  ];
-
   // Calculate aggregate rating
-  const aggregateRating = {
-    "@type": "AggregateRating",
-    ratingValue: (
-      sampleReviews.reduce((sum, r) => sum + r.rating, 0) / sampleReviews.length
-    ).toFixed(1),
-    reviewCount: sampleReviews.length,
-  };
+  const aggregateRating = getAggregateRating();
 
-  const productSchema = {
-    "@context": "https://schema.org/",
-    "@type": "Product",
-    name: book.title,
-    image: `${window.location.origin}${book.coverImageUrl}`,
-    description: book.description,
-    sku: book.sku,
-    offers: {
-      "@type": "Offer",
-      url: `${window.location.origin}/customize/${selectedStory?.id}`,
-      priceCurrency: "USD",
-      price: book.price.toFixed(2),
-      availability: "https://schema.org/InStock",
-    },
-    brand: {
-      "@type": "Brand",
-      name: "DonorBookies",
-    },
-    isFamilyFriendly: true,
-    additionalProperty: [
-      {
-        "@type": "PropertyValue",
-        name: "Customizable",
-        value: "Yes",
-        description:
-          "Personalize names, appearances, family structure, and journey details.",
-      },
-      {
-        "@type": "PropertyValue",
-        name: "Family Structure",
-        value: book.familyStructure,
-      },
-    ],
-    aggregateRating,
-    review: sampleReviews.map((r) => ({
-      "@type": "Review",
-      reviewRating: {
-        "@type": "Rating",
-        ratingValue: r.rating,
-        bestRating: 5,
-      },
-      author: {
-        "@type": "Person",
-        name: r.author,
-      },
-      reviewBody: r.text,
-    })),
-  };
+  const productSchema = getProductSchema(book, selectedStory);
 
-  const bookSchema = {
-    "@context": "https://schema.org/",
-    "@type": "Book",
-    name: book.title,
-    author: {
-      "@type": "Person",
-      name: book.author,
-    },
-    illustrator: {
-      "@type": "Person",
-      name: book.illustrator,
-    },
-    bookFormat: "https://schema.org/Hardcover",
-    numberOfPages: book.pages,
-    inLanguage: "en-US",
-    description: book.description,
-    image: `${window.location.origin}${book.coverImageUrl}`,
-    isbn: undefined, // Optional, can be filled if available
-  };
+  const bookSchema = getBookSchema(book);
 
   return (
     <HelmetProvider>
@@ -576,23 +416,7 @@ const CustomizeBook = () => {
               </>
             )}
             
-            <div className="mt-16">
-              <h2 className="text-2xl font-bold mb-4">What Our Customers Say</h2>
-              <div className="grid gap-6 md:grid-cols-3">
-                {sampleReviews.map((review, idx) => (
-                  <div key={idx} className="bg-white rounded-lg shadow p-6 flex flex-col">
-                    <div className="flex items-center mb-2">
-                      <span className="font-semibold text-lg mr-2">{review.author}</span>
-                      <span className="text-yellow-500">{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</span>
-                    </div>
-                    <p className="text-muted-foreground flex-1">{review.text}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4 text-sm text-muted-foreground">
-                Average rating: <strong>{aggregateRating.ratingValue}</strong> ({aggregateRating.reviewCount} reviews)
-              </div>
-            </div>
+          
             <div className="flex justify-between mt-12">
               <Button 
                 variant="outline" 
@@ -641,6 +465,10 @@ const CustomizeBook = () => {
               </div>
             </div>
           </div>
+          <div className="mt-16">
+              <h2 className="text-2xl font-bold mb-4">What Our Customers Say</h2>
+              <CustomerReviews reviews={sampleReviews} aggregateRating={aggregateRating} />
+            </div>
         </main>
         <Footer />
       </div>
