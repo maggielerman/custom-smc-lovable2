@@ -9,6 +9,10 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Profile from "./pages/Profile";
+import Account from "./pages/Account";
+import MyBooks from "./pages/MyBooks";
+import BookEditor from "./pages/BookEditor";
 import AuthGuard from "./components/AuthGuard";
 import { useEffect } from "react";
 import { supabaseClient } from "./lib/supabase";
@@ -42,8 +46,11 @@ const AppContent = () => {
       
       {/* Protected routes - only accessible when logged in */}
       <Route element={<AuthGuard requireAuth={true} />}>
-        {/* Add protected routes here */}
-        {/* Example: <Route path="/dashboard" element={<Dashboard />} /> */}
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/account" element={<Account />} />
+        <Route path="/my-books" element={<MyBooks />} />
+        <Route path="/books/new" element={<BookEditor />} />
+        <Route path="/books/:id/edit" element={<BookEditor />} />
       </Route>
       
       {/* Catch-all route */}
