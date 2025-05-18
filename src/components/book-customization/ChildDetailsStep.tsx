@@ -8,18 +8,34 @@ type ChildDetailsStepProps = {
   childName: string;
   childAge: string;
   childGender: string;
+  childPronouns: string;
+  conceptionMethod: string;
+  donorType: string;
+  surrogateName: string;
   onNameChange: (value: string) => void;
   onAgeChange: (value: string) => void;
   onGenderChange: (value: string) => void;
+  onPronounsChange: (value: string) => void;
+  onConceptionMethodChange: (value: string) => void;
+  onDonorTypeChange: (value: string) => void;
+  onSurrogateNameChange: (value: string) => void;
 };
 
 const ChildDetailsStep = ({
   childName,
   childAge,
   childGender,
+  childPronouns,
+  conceptionMethod,
+  donorType,
+  surrogateName,
   onNameChange,
   onAgeChange,
-  onGenderChange
+  onGenderChange,
+  onPronounsChange,
+  onConceptionMethodChange,
+  onDonorTypeChange,
+  onSurrogateNameChange,
 }: ChildDetailsStepProps) => {
   // Generate age options for children 0-12
   const ageOptions = Array.from({ length: 13 }, (_, i) => {
@@ -93,6 +109,58 @@ const ChildDetailsStep = ({
               </Label>
             </div>
           </RadioGroup>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="child-pronouns">Child's Pronouns</Label>
+          <Select value={childPronouns} onValueChange={onPronounsChange}>
+            <SelectTrigger id="child-pronouns">
+              <SelectValue placeholder="Select pronouns" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="she/her">she/her</SelectItem>
+              <SelectItem value="he/him">he/him</SelectItem>
+              <SelectItem value="they/them">they/them</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="conception-method">Conception Method</Label>
+          <Select value={conceptionMethod} onValueChange={onConceptionMethodChange}>
+            <SelectTrigger id="conception-method">
+              <SelectValue placeholder="Select method" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="IVF">IVF</SelectItem>
+              <SelectItem value="IUI">IUI</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="donor-type">Donor Type</Label>
+          <Select value={donorType} onValueChange={onDonorTypeChange}>
+            <SelectTrigger id="donor-type">
+              <SelectValue placeholder="Select donor" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="sperm">Sperm Donor</SelectItem>
+              <SelectItem value="egg">Egg Donor</SelectItem>
+              <SelectItem value="double">Double Donor</SelectItem>
+              <SelectItem value="none">None</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="surrogate-name">Surrogate Name (if any)</Label>
+          <Input
+            id="surrogate-name"
+            value={surrogateName}
+            onChange={(e) => onSurrogateNameChange(e.target.value)}
+            placeholder="Enter surrogate's name"
+          />
         </div>
       </div>
     </div>

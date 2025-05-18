@@ -7,6 +7,10 @@ const initialBookData = {
   childName: "",
   childAge: "",
   childGender: "",
+  childPronouns: "",
+  conceptionMethod: "",
+  donorType: "",
+  surrogateName: "",
   selectedIllustrations: {},
   dedication: "",
 };

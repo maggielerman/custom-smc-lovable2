@@ -12,6 +12,7 @@ type FamilyMember = {
   role: string;
   name: string;
   customRole?: string;
+  pronouns?: string;
 };
 
 type FamilyMembersStepProps = {
@@ -59,38 +60,38 @@ const FamilyMembersStep = ({
       switch (familyStructure) {
         case "two-parents":
           defaultMembers.push(
-            { id: crypto.randomUUID(), role: "Mom", name: "" },
-            { id: crypto.randomUUID(), role: "Dad", name: "" }
+            { id: crypto.randomUUID(), role: "Mom", name: "", pronouns: "she/her" },
+            { id: crypto.randomUUID(), role: "Dad", name: "", pronouns: "he/him" }
           );
           break;
         case "single-mom":
-          defaultMembers.push({ id: crypto.randomUUID(), role: "Mom", name: "" });
+          defaultMembers.push({ id: crypto.randomUUID(), role: "Mom", name: "", pronouns: "she/her" });
           break;
         case "single-dad":
-          defaultMembers.push({ id: crypto.randomUUID(), role: "Dad", name: "" });
+          defaultMembers.push({ id: crypto.randomUUID(), role: "Dad", name: "", pronouns: "he/him" });
           break;
         case "two-moms":
           defaultMembers.push(
-            { id: crypto.randomUUID(), role: "Mom", name: "" },
-            { id: crypto.randomUUID(), role: "Mama", name: "" }
+            { id: crypto.randomUUID(), role: "Mom", name: "", pronouns: "she/her" },
+            { id: crypto.randomUUID(), role: "Mama", name: "", pronouns: "she/her" }
           );
           break;
         case "two-dads":
           defaultMembers.push(
-            { id: crypto.randomUUID(), role: "Dad", name: "" },
-            { id: crypto.randomUUID(), role: "Papa", name: "" }
+            { id: crypto.randomUUID(), role: "Dad", name: "", pronouns: "he/him" },
+            { id: crypto.randomUUID(), role: "Papa", name: "", pronouns: "he/him" }
           );
           break;
         case "grandparents":
           defaultMembers.push(
-            { id: crypto.randomUUID(), role: "Grandmother", name: "" },
-            { id: crypto.randomUUID(), role: "Grandfather", name: "" }
+            { id: crypto.randomUUID(), role: "Grandmother", name: "", pronouns: "she/her" },
+            { id: crypto.randomUUID(), role: "Grandfather", name: "", pronouns: "he/him" }
           );
           break;
         case "adoptive":
           defaultMembers.push(
-            { id: crypto.randomUUID(), role: "Adoptive Mom", name: "" },
-            { id: crypto.randomUUID(), role: "Adoptive Dad", name: "" }
+            { id: crypto.randomUUID(), role: "Adoptive Mom", name: "", pronouns: "she/her" },
+            { id: crypto.randomUUID(), role: "Adoptive Dad", name: "", pronouns: "he/him" }
           );
           break;
       }
@@ -104,7 +105,8 @@ const FamilyMembersStep = ({
     const newMember = {
       id: crypto.randomUUID(),
       role: "",
-      name: ""
+      name: "",
+      pronouns: ""
     };
     
     const updatedMembers = [...members, newMember];
@@ -197,6 +199,23 @@ const FamilyMembersStep = ({
                   onChange={(e) => updateMember(member.id, "name", e.target.value)}
                   placeholder="Enter name"
                 />
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor={`pronouns-${member.id}`}>Pronouns</Label>
+                <Select
+                  value={member.pronouns || ''}
+                  onValueChange={(value) => updateMember(member.id, 'pronouns', value)}
+                >
+                  <SelectTrigger id={`pronouns-${member.id}`}>
+                    <SelectValue placeholder="Select pronouns" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="she/her">she/her</SelectItem>
+                    <SelectItem value="he/him">he/him</SelectItem>
+                    <SelectItem value="they/them">they/them</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </CardContent>
           </Card>
