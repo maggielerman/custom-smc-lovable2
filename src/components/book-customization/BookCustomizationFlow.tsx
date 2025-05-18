@@ -70,9 +70,17 @@ const BookCustomizationFlow: React.FC<BookCustomizationFlowProps> = ({
                 childName={bookData.childName}
                 childAge={bookData.childAge}
                 childGender={bookData.childGender}
+                childPronouns={bookData.childPronouns}
+                conceptionMethod={bookData.conceptionMethod}
+                donorType={bookData.donorType}
+                surrogateName={bookData.surrogateName}
                 onNameChange={(value) => handleUpdateField("childName", value)}
                 onAgeChange={(value) => handleUpdateField("childAge", value)}
                 onGenderChange={(value) => handleUpdateField("childGender", value)}
+                onPronounsChange={(value) => handleUpdateField("childPronouns", value)}
+                onConceptionMethodChange={(value) => handleUpdateField("conceptionMethod", value)}
+                onDonorTypeChange={(value) => handleUpdateField("donorType", value)}
+                onSurrogateNameChange={(value) => handleUpdateField("surrogateName", value)}
               />
             )}
             {currentStep === 3 && (

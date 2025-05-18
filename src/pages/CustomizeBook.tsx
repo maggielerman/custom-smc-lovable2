@@ -70,10 +70,16 @@ const CustomizeBook = () => {
             'childName' in obj &&
             'childAge' in obj &&
             'childGender' in obj &&
+            'childPronouns' in obj &&
+            'conceptionMethod' in obj &&
+            'donorType' in obj &&
+            'surrogateName' in obj &&
             'selectedIllustrations' in obj &&
             'dedication' in obj;
           if (typeof data.content === 'object' && !Array.isArray(data.content) && isValidBookData(data.content)) {
-            setSelectedStory(data.content as BookTemplate);
+            setBookData(data.content);
+            const template = DUMMY_STORIES.find(t => t.id === data.template_id) || null;
+            setSelectedStory(template);
           } else {
             setSelectedStory(null);
           }
@@ -134,6 +140,10 @@ const CustomizeBook = () => {
       childName: "",
       childAge: "",
       childGender: "",
+      childPronouns: "",
+      conceptionMethod: "",
+      donorType: "",
+      surrogateName: "",
       selectedIllustrations: {},
       dedication: "",
     });
