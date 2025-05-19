@@ -1,5 +1,4 @@
 
-import { createClient } from '@supabase/supabase-js'
 import { supabase as supabaseFromIntegration } from '@/integrations/supabase/client'
 
 export type Database = {
@@ -64,16 +63,22 @@ export type Database = {
   }
 }
 
-// Create Supabase client using the integration
-export const supabaseClient = supabaseFromIntegration
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+// Create Supabase client using the integration only if env vars are present
+export const supabaseClient =
+  SUPABASE_URL && SUPABASE_ANON_KEY ? supabaseFromIntegration : null
 
 // Helper function to safely use the Supabase client
 export const getSupabaseClient = () => {
   if (!supabaseClient) {
-    console.error('Supabase client is not initialized. Please connect your project to Supabase.');
-    throw new Error('Supabase client is not initialized. Please connect your project to Supabase.');
+    const message =
+      'Supabase client is not initialized. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.'
+    console.error(message)
+    throw new Error(message)
   }
-  return supabaseClient;
-};
+  return supabaseClient
+}
 
 export default supabaseClient;
