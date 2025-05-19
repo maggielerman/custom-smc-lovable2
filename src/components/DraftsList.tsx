@@ -40,22 +40,31 @@ const DraftsList = ({ published }: DraftsListProps) => {
     const fetchBooks = async () => {
       try {
         setLoading(true);
-        
+
+        if (!supabaseClient) {
+          const localDrafts = JSON.parse(localStorage.getItem('local-drafts') || '[]');
+          let drafts = localDrafts.filter((d: any) => d.user_id === user.id);
+          if (published !== undefined) {
+            drafts = drafts.filter((d: any) => d.published === published);
+          }
+          setBooks(drafts);
+          return;
+        }
+
         let query = supabaseClient
           .from("books")
           .select("*")
           .eq("user_id", user.id)
           .order("updated_at", { ascending: false });
-        
-        // If filtering by published status
+
         if (published !== undefined) {
           query = query.eq("published", published);
         }
-        
+
         const { data, error } = await query;
 
         if (error) throw error;
-        
+
         setBooks(data || []);
       } catch (error: any) {
         console.error("Error fetching books:", error);
@@ -72,15 +81,23 @@ const DraftsList = ({ published }: DraftsListProps) => {
     if (!confirm("Are you sure you want to delete this book? This action cannot be undone.")) {
       return;
     }
-    
+
     try {
+      if (!supabaseClient) {
+        const localDrafts = JSON.parse(localStorage.getItem('local-drafts') || '[]').filter((d: any) => d.id !== id);
+        localStorage.setItem('local-drafts', JSON.stringify(localDrafts));
+        setBooks(localDrafts);
+        toast.success("Book deleted successfully");
+        return;
+      }
+
       const { error } = await supabaseClient
         .from("books")
         .delete()
         .eq("id", id);
 
       if (error) throw error;
-      
+
       setBooks((prevBooks) => prevBooks.filter((book) => book.id !== id));
       toast.success("Book deleted successfully");
     } catch (error: any) {

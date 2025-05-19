@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { supabaseClient } from "@/lib/supabase";
+import { supabaseClient, getSupabaseClient } from "@/lib/supabase";
 
 export function useBookActions({
   user,
@@ -27,15 +27,16 @@ export function useBookActions({
         published: publish,
       };
       let data, error;
+      const client = getSupabaseClient();
       if (bookId) {
-        ({ data, error } = await supabaseClient
+        ({ data, error } = await client
           .from("books")
           .update({ ...book, updated_at: new Date().toISOString() })
           .eq("id", bookId)
           .select()
           .single());
       } else {
-        ({ data, error } = await supabaseClient
+        ({ data, error } = await client
           .from("books")
           .insert(book)
           .select()
@@ -48,9 +49,18 @@ export function useBookActions({
       if (!publish) {
         navigate("/");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error saving book:", error);
-      toast.error("Failed to save book", { description: error?.message || String(error) });
+      if (error.message?.includes('Supabase client is not initialized')) {
+        const localDrafts = JSON.parse(localStorage.getItem('local-drafts') || '[]');
+        const id = bookId || crypto.randomUUID();
+        const draft = { ...book, id };
+        localStorage.setItem('local-drafts', JSON.stringify([...localDrafts.filter((d: any) => d.id !== id), draft]));
+        toast.success('Draft saved locally');
+        navigate('/');
+      } else {
+        toast.error('Failed to save book', { description: error?.message || String(error) });
+      }
     } finally {
       setSaving(false);
     }
