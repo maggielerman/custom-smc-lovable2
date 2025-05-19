@@ -1,4 +1,3 @@
-
 import {
   Carousel,
   CarouselContent,
@@ -41,13 +40,13 @@ const testimonials = [
 
 const TestimonialSection = () => {
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-[var(--cream)]">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-[var(--navy)]">
             What Families Are Saying
           </h2>
-          <p className="mt-4 max-w-2xl mx-auto text-gray-600 md:text-lg">
+          <p className="mt-4 max-w-2xl mx-auto text-[var(--charcoal)] md:text-lg">
             Hear from families who have used our books to share their special stories.
           </p>
         </div>
@@ -56,18 +55,18 @@ const TestimonialSection = () => {
           <CarouselContent>
             {testimonials.map((testimonial) => (
               <CarouselItem key={testimonial.id} className="md:basis-1/2 lg:basis-1/2">
-                <Card className="h-full border-none shadow-md hover:shadow-lg transition-shadow">
+                <Card className="h-full border-none shadow-md hover:shadow-lg transition-shadow bg-white">
                   <CardContent className="p-6 flex flex-col h-full">
                     <div className="flex-grow">
                       <svg
-                        className="h-8 w-8 text-primary mb-4 opacity-50"
+                        className="h-8 w-8 text-[var(--mint)] mb-4 opacity-50"
                         fill="currentColor"
                         viewBox="0 0 32 32"
                         aria-hidden="true"
                       >
                         <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
                       </svg>
-                      <p className="text-gray-700 mb-6">{testimonial.quote}</p>
+                      <p className="text-[var(--charcoal)] mb-6">{testimonial.quote}</p>
                     </div>
                     <div className="flex items-center mt-4">
                       <div className="h-10 w-10 rounded-full overflow-hidden mr-3">
@@ -78,8 +77,8 @@ const TestimonialSection = () => {
                         />
                       </div>
                       <div>
-                        <p className="font-medium">{testimonial.author}</p>
-                        <p className="text-sm text-gray-500">{testimonial.role}</p>
+                        <p className="font-medium text-[var(--navy)]">{testimonial.author}</p>
+                        <p className="text-sm text-[var(--mint)]">{testimonial.role}</p>
                       </div>
                     </div>
                   </CardContent>

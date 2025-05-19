@@ -1,4 +1,3 @@
-
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -94,7 +93,7 @@ const ChildDetailsStep = ({
               <RadioGroupItem value="girl" id="girl" className="peer sr-only" />
               <Label
                 htmlFor="girl"
-                className="flex items-center justify-center rounded-md border-2 border-muted p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                className="flex items-center justify-center rounded-md border-2 border-muted p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-[var(--navy)] [&:has([data-state=checked])]:border-[var(--navy)] cursor-pointer"
               >
                 Girl
               </Label>
@@ -103,7 +102,7 @@ const ChildDetailsStep = ({
               <RadioGroupItem value="boy" id="boy" className="peer sr-only" />
               <Label
                 htmlFor="boy"
-                className="flex items-center justify-center rounded-md border-2 border-muted p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                className="flex items-center justify-center rounded-md border-2 border-muted p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-[var(--navy)] [&:has([data-state=checked])]:border-[var(--navy)] cursor-pointer"
               >
                 Boy
               </Label>

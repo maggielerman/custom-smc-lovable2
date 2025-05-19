@@ -1,4 +1,3 @@
-
 import { CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -41,13 +40,13 @@ const features = [
 
 const HowItWorks = () => {
   return (
-    <section className="py-16 bg-white" id="how-it-works">
+    <section className="py-16 bg-[var(--cream)]" id="how-it-works">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-[var(--navy)]">
             How It Works
           </h2>
-          <p className="mt-4 max-w-2xl mx-auto text-gray-600 md:text-lg">
+          <p className="mt-4 max-w-2xl mx-auto text-[var(--charcoal)] md:text-lg">
             Creating your personalized donor conception storybook is simple,
             quick, and meaningful.
           </p>
@@ -62,8 +61,8 @@ const HowItWorks = () => {
               }`}
             >
               <div className={index % 2 === 1 ? "md:col-start-2" : ""}>
-                <h3 className="text-2xl font-bold text-primary">{step.title}</h3>
-                <p className="mt-4 text-gray-600 md:text-lg">{step.description}</p>
+                <h3 className="text-2xl font-bold text-[var(--navy)]">{step.title}</h3>
+                <p className="mt-4 text-[var(--charcoal)] md:text-lg">{step.description}</p>
               </div>
               <div
                 className={`rounded-xl overflow-hidden shadow-lg ${
@@ -80,22 +79,22 @@ const HowItWorks = () => {
           ))}
         </div>
 
-        <div className="mt-20 bg-primary-50 rounded-2xl p-8 md:p-12">
-          <h3 className="text-2xl font-bold mb-6 text-center">
+        <div className="mt-20 bg-[var(--mint)] rounded-2xl p-8 md:p-12">
+          <h3 className="text-2xl font-bold mb-6 text-center text-[var(--navy)]">
             Every Book Includes
           </h3>
           <div className="grid md:grid-cols-2 gap-4">
             {features.map((feature, index) => (
               <div key={index} className="flex items-center space-x-3">
-                <CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
-                <span className="text-gray-700">{feature}</span>
+                <CheckCircle className="h-5 w-5 text-[var(--navy)] flex-shrink-0" />
+                <span className="text-[var(--charcoal)]">{feature}</span>
               </div>
             ))}
           </div>
           
           <div className="mt-10 text-center">
             <Link to="/how-it-works">
-              <Button size="lg">Learn More About the Process</Button>
+              <Button size="lg" className="bg-[var(--navy)] text-white hover:bg-[var(--blush)] hover:text-[var(--navy)]">Learn More About the Process</Button>
             </Link>
           </div>
         </div>

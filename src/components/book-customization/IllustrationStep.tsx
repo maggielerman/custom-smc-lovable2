@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -96,7 +95,7 @@ const IllustrationStep = ({
                       />
                       <Label
                         htmlFor={`child-skin-${tone.value}`}
-                        className="flex flex-col items-center justify-center rounded-md border-2 border-muted hover:border-primary cursor-pointer p-1 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                        className="flex flex-col items-center justify-center rounded-md border-2 border-muted hover:border-[var(--navy)] cursor-pointer p-1 peer-data-[state=checked]:border-[var(--navy)] [&:has([data-state=checked])]:border-[var(--navy)]"
                       >
                         <div 
                           className="w-12 h-12 rounded-full"
@@ -131,7 +130,7 @@ const IllustrationStep = ({
                       />
                       <Label
                         htmlFor={`child-hair-${color.value}`}
-                        className="flex flex-col items-center justify-center rounded-md border-2 border-muted hover:border-primary cursor-pointer p-1 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                        className="flex flex-col items-center justify-center rounded-md border-2 border-muted hover:border-[var(--navy)] cursor-pointer p-1 peer-data-[state=checked]:border-[var(--navy)] [&:has([data-state=checked])]:border-[var(--navy)]"
                       >
                         <div 
                           className="w-12 h-12 rounded-full"
@@ -166,7 +165,7 @@ const IllustrationStep = ({
                       />
                       <Label
                         htmlFor={`child-style-${style.value}`}
-                        className="flex items-center justify-center rounded-md border-2 border-muted p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer text-center"
+                        className="flex items-center justify-center rounded-md border-2 border-muted p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-[var(--navy)] [&:has([data-state=checked])]:border-[var(--navy)] cursor-pointer text-center"
                       >
                         {style.label}
                       </Label>
@@ -201,7 +200,7 @@ const IllustrationStep = ({
                     />
                     <Label
                       htmlFor={`family-skin-${tone.value}`}
-                      className="flex flex-col items-center justify-center rounded-md border-2 border-muted hover:border-primary cursor-pointer p-1 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                      className="flex flex-col items-center justify-center rounded-md border-2 border-muted hover:border-[var(--navy)] cursor-pointer p-1 peer-data-[state=checked]:border-[var(--navy)] [&:has([data-state=checked])]:border-[var(--navy)]"
                     >
                       <div 
                         className="w-12 h-12 rounded-full"
@@ -231,7 +230,7 @@ const IllustrationStep = ({
                   <RadioGroupItem value="friendly" id="friendly-art" className="peer sr-only" />
                   <Label
                     htmlFor="friendly-art"
-                    className="flex flex-col h-full gap-2 rounded-md border-2 border-muted p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                    className="flex flex-col h-full gap-2 rounded-md border-2 border-muted p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-[var(--navy)] [&:has([data-state=checked])]:border-[var(--navy)] cursor-pointer"
                   >
                     <div className="font-medium">Friendly</div>
                     <div className="text-sm text-muted-foreground">
@@ -244,7 +243,7 @@ const IllustrationStep = ({
                   <RadioGroupItem value="modern" id="modern-art" className="peer sr-only" />
                   <Label
                     htmlFor="modern-art"
-                    className="flex flex-col h-full gap-2 rounded-md border-2 border-muted p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                    className="flex flex-col h-full gap-2 rounded-md border-2 border-muted p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-[var(--navy)] [&:has([data-state=checked])]:border-[var(--navy)] cursor-pointer"
                   >
                     <div className="font-medium">Modern</div>
                     <div className="text-sm text-muted-foreground">
@@ -257,7 +256,7 @@ const IllustrationStep = ({
                   <RadioGroupItem value="storybook" id="storybook-art" className="peer sr-only" />
                   <Label
                     htmlFor="storybook-art"
-                    className="flex flex-col h-full gap-2 rounded-md border-2 border-muted p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                    className="flex flex-col h-full gap-2 rounded-md border-2 border-muted p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-[var(--navy)] [&:has([data-state=checked])]:border-[var(--navy)] cursor-pointer"
                   >
                     <div className="font-medium">Storybook</div>
                     <div className="text-sm text-muted-foreground">
@@ -323,7 +322,7 @@ const IllustrationStep = ({
                     />
                     <label
                       htmlFor={`bg-${bg.value}`}
-                      className="block cursor-pointer rounded-lg overflow-hidden border-2 peer-checked:border-primary transition-all"
+                      className="block cursor-pointer rounded-lg overflow-hidden border-2 peer-checked:border-[var(--navy)] transition-all"
                     >
                       <div className="aspect-square relative overflow-hidden">
                         <img

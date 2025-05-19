@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="bg-primary-50 border-t">
+    <footer className="bg-[var(--softgray)] border-t">
       <div className="container mx-auto px-4 py-12 md:px-6">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div>
@@ -43,22 +43,22 @@ const Footer = () => {
             <h3 className="text-sm font-semibold uppercase tracking-wider">Company</h3>
             <ul className="mt-4 space-y-2">
               <li>
-                <Link to="/about" className="text-sm text-gray-600 hover:text-primary">
+                <Link to="/about" className="text-sm text-[var(--navy)] hover:text-[var(--blush)]">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="text-sm text-gray-600 hover:text-primary">
+                <Link to="/blog" className="text-sm text-[var(--navy)] hover:text-[var(--blush)]">
                   Blog
                 </Link>
               </li>
               <li>
-                <Link to="/testimonials" className="text-sm text-gray-600 hover:text-primary">
+                <Link to="/testimonials" className="text-sm text-[var(--navy)] hover:text-[var(--blush)]">
                   Testimonials
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-sm text-gray-600 hover:text-primary">
+                <Link to="/contact" className="text-sm text-[var(--navy)] hover:text-[var(--blush)]">
                   Contact
                 </Link>
               </li>
@@ -69,12 +69,12 @@ const Footer = () => {
             <h3 className="text-sm font-semibold uppercase tracking-wider">Legal</h3>
             <ul className="mt-4 space-y-2">
               <li>
-                <Link to="/privacy" className="text-sm text-gray-600 hover:text-primary">
+                <Link to="/privacy" className="text-sm text-[var(--navy)] hover:text-[var(--blush)]">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link to="/terms" className="text-sm text-gray-600 hover:text-primary">
+                <Link to="/terms" className="text-sm text-[var(--navy)] hover:text-[var(--blush)]">
                   Terms of Service
                 </Link>
               </li>

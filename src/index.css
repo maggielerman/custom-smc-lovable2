@@ -49,6 +49,17 @@
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --font-sans: 'Quicksand', 'Nunito', 'Poppins', 'ui-sans-serif', 'system-ui', sans-serif;
+    --rainbow-gradient: linear-gradient(90deg, #F4A261 0%, #F6C1B0 20%, #F7E6A2 40%, #B7E4B6 60%, #8EC6E6 100%);
+    --cream: #FAF9F6;
+    --softgray: #E9E7E2;
+    --blush: #F7D6E0;
+    --mint: #D6F5E3;
+    --sky: #D6E8F5;
+    --butter: #FFF6D6;
+    --navy: #2D3142;
+    --charcoal: #4F5D75;
   }
 
   .dark {
@@ -97,5 +108,6 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-sans);
   }
 }

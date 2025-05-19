@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -44,10 +43,10 @@ const FamilyStructureStep = ({ value, onChange }: FamilyStructureProps) => {
               />
               <Label
                 htmlFor={structure.id}
-                className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-background p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-background p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-[var(--navy)] [&:has([data-state=checked])]:border-[var(--navy)] cursor-pointer"
               >
-                <div className="mb-3 rounded-full bg-primary/10 p-3">
-                  <Users className="h-6 w-6 text-primary" />
+                <div className="mb-3 rounded-full bg-[var(--mint)] p-3">
+                  <Users className="h-6 w-6 text-[var(--navy)]" />
                 </div>
                 <div className="text-center">
                   <h3 className="font-medium">{structure.label}</h3>

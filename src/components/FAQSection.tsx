@@ -21,13 +21,13 @@ const FAQSection = ({ faqs, grouped }: FAQSectionProps) => {
     const leftGroups = groups.slice(0, mid);
     const rightGroups = groups.slice(mid);
     return (
-      <section className="py-16 bg-gray-50" id="faq">
+      <section className="py-16 bg-[var(--cream)]" id="faq">
         <div className="container max-w-screen ">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-[var(--navy)]">
               Frequently Asked Questions
             </h2>
-            <p className="mt-4 max-w-2xl mx-auto text-gray-600 md:text-lg">
+            <p className="mt-4 max-w-2xl mx-auto text-[var(--charcoal)] md:text-lg">
               Find answers to common questions about our personalized donor conception books.
             </p>
           </div>
@@ -72,9 +72,9 @@ const FAQSection = ({ faqs, grouped }: FAQSectionProps) => {
             </div>
           </div>
           <div className="mt-12 text-center">
-            <p className="text-gray-600">
+            <p className="text-[var(--charcoal)]">
               Have more questions? We're here to help!{" "}
-              <a href="/contact" className="text-primary font-medium underline hover:text-primary/80">
+              <a href="/contact" className="text-[var(--mint)] font-medium underline hover:text-[var(--navy)]">
                 Contact our team
               </a>
             </p>
@@ -85,13 +85,13 @@ const FAQSection = ({ faqs, grouped }: FAQSectionProps) => {
   } else {
     const flatFaqs: FAQ[] = (faqs as FAQ[]) || MASTER_FAQS;
     return (
-      <section className="py-16 bg-gray-50" id="faq">
+      <section className="py-16 bg-[var(--cream)]" id="faq">
         <div className="container">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-[var(--navy)]">
               Frequently Asked Questions
             </h2>
-            <p className="mt-4 max-w-2xl mx-auto text-gray-600 md:text-lg">
+            <p className="mt-4 max-w-2xl mx-auto text-[var(--charcoal)] md:text-lg">
               Find answers to common questions about our personalized donor conception books.
             </p>
           </div>
@@ -110,9 +110,9 @@ const FAQSection = ({ faqs, grouped }: FAQSectionProps) => {
             </Accordion>
           </div>
           <div className="mt-12 text-center">
-            <p className="text-gray-600">
+            <p className="text-[var(--charcoal)]">
               Have more questions? We're here to help!{" "}
-              <a href="/contact" className="text-primary font-medium underline hover:text-primary/80">
+              <a href="/contact" className="text-[var(--mint)] font-medium underline hover:text-[var(--navy)]">
                 Contact our team
               </a>
             </p>

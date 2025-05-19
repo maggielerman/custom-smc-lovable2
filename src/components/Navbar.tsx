@@ -36,24 +36,24 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white shadow-sm py-4">
+    <nav className="bg-[var(--cream)] shadow-sm py-4">
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
-          <span className="text-2xl font-bold text-primary">DonorBookies</span>
+          <span className="text-2xl font-bold text-[var(--navy)]">DonorBookies</span>
         </Link>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-6">
-          <Link to="/how-it-works" className="text-gray-600 hover:text-primary transition-colors">
+          <Link to="/how-it-works" className="text-[var(--navy)] hover:text-[var(--blush)] transition-colors">
             How It Works
           </Link>
-          <Link to="/pricing" className="text-gray-600 hover:text-primary transition-colors">
+          <Link to="/pricing" className="text-[var(--navy)] hover:text-[var(--blush)] transition-colors">
             Pricing
           </Link>
-          <Link to="/faq" className="text-gray-600 hover:text-primary transition-colors">
+          <Link to="/faq" className="text-[var(--navy)] hover:text-[var(--blush)] transition-colors">
             FAQ
           </Link>
-          <Link to="/about" className="text-gray-600 hover:text-primary transition-colors">
+          <Link to="/about" className="text-[var(--navy)] hover:text-[var(--blush)] transition-colors">
             About Us
           </Link>
 
