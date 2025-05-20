@@ -3,6 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { getSavedFamilyData } from "@/hooks/useSavedFamilyData";
 
 type ChildDetailsStepProps = {
   childName: string;
@@ -38,6 +40,17 @@ const ChildDetailsStep = ({
   onSurrogateNameChange,
 }: ChildDetailsStepProps) => {
   // Generate age options for children 0-12
+  const savedData = getSavedFamilyData();
+
+  const loadSaved = () => {
+    if (savedData) {
+      onConceptionMethodChange(savedData.conceptionMethod);
+      onDonorTypeChange(savedData.donorType);
+      onSurrogateNameChange(savedData.surrogateName);
+    }
+  };
+
+  const ageOptions = Array.from({ length: 13 }, (_, i) => {
   const ageOptions = Array.from({ length: 13 }, (_, i) => {
     if (i === 0) return { value: "0", label: "Less than 1 year" };
     if (i === 1) return { value: "1", label: "1 year old" };
@@ -51,6 +64,11 @@ const ChildDetailsStep = ({
         <p className="text-muted-foreground">
           Tell us about the child who will be featured in the book
         </p>
+        {savedData ? (
+          <Button variant="outline" className="mt-4" onClick={loadSaved}>
+            Use Saved Journey
+          </Button>
+        ) : null}
       </div>
 
       <div className="max-w-md mx-auto space-y-6">

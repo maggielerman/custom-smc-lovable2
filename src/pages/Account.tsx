@@ -11,13 +11,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BookOpen, Settings, FileText, LogIn } from "lucide-react";
+import { BookOpen, Settings, FileText, LogIn, Users, Trash2 } from "lucide-react";
 import DraftsList from "@/components/DraftsList";
 import { useNavigate } from "react-router-dom";
 import { supabaseClient } from "@/lib/supabase";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Textarea } from "@/components/ui/textarea";
+import { getSavedFamilyData, saveFamilyData, SavedFamilyMember, SavedFamilyData } from "@/hooks/useSavedFamilyData";
 
 const Account = () => {
   const { user, signOut, isLoading } = useAuth();
@@ -26,6 +28,15 @@ const Account = () => {
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [profileLoading, setProfileLoading] = useState(false);
+  const [familyData, setFamilyData] = useState<SavedFamilyData>(() =>
+    getSavedFamilyData() || {
+      familyMembers: [],
+      conceptionMethod: "",
+      donorType: "",
+      surrogateName: "",
+      familyStory: "",
+    }
+  );
 
   useEffect(() => {
     if (!user) return;
@@ -71,6 +82,34 @@ const Account = () => {
     } finally {
       setProfileLoading(false);
     }
+  };
+
+  const addMember = () => {
+    const newMember: SavedFamilyMember = {
+      id: crypto.randomUUID(),
+      role: "",
+      name: "",
+      pronouns: "",
+    };
+    setFamilyData((d) => ({ ...d, familyMembers: [...d.familyMembers, newMember] }));
+  };
+
+  const updateMember = (id: string, field: string, value: string) => {
+    setFamilyData((d) => ({
+      ...d,
+      familyMembers: d.familyMembers.map((m) => (m.id === id ? { ...m, [field]: value } : m)),
+    }));
+  };
+
+  const removeMember = (id: string) => {
+    setFamilyData((d) => ({
+      ...d,
+      familyMembers: d.familyMembers.filter((m) => m.id !== id),
+    }));
+  };
+
+  const handleSaveFamilyData = () => {
+    saveFamilyData(familyData);
   };
 
   // Login prompt component
@@ -120,7 +159,7 @@ const Account = () => {
       </div>
 
       <Tabs defaultValue="drafts" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 mb-8">
+        <TabsList className="grid w-full grid-cols-5 mb-8">
           <TabsTrigger value="drafts" className="flex gap-2 items-center">
             <FileText className="h-4 w-4" />
             <span className="hidden sm:inline">Saved Drafts</span>
@@ -134,6 +173,10 @@ const Account = () => {
           <TabsTrigger value="settings" className="flex gap-2 items-center">
             <Settings className="h-4 w-4" />
             <span>Settings</span>
+          </TabsTrigger>
+          <TabsTrigger value="family" className="flex gap-2 items-center">
+            <Users className="h-4 w-4" />
+            <span>Family Data</span>
           </TabsTrigger>
           <TabsTrigger value="profile" className="flex gap-2 items-center">
             <Avatar className="h-4 w-4">
@@ -160,6 +203,94 @@ const Account = () => {
               <Button asChild>
                 <Link to="/customize/">Create New Book</Link>
               </Button>
+            </CardFooter>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="family">
+          <Card>
+            <CardHeader>
+              <CardTitle>Saved Family Details</CardTitle>
+              <CardDescription>
+                Manage family members and conception journey info.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {familyData.familyMembers.map((m, i) => (
+                <div key={m.id} className="border p-4 rounded relative space-y-2">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="absolute top-2 right-2"
+                    onClick={() => removeMember(m.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                  <div className="space-y-2">
+                    <Label>Name</Label>
+                    <Input
+                      value={m.name}
+                      onChange={(e) => updateMember(m.id, 'name', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Role</Label>
+                    <Input
+                      value={m.role}
+                      onChange={(e) => updateMember(m.id, 'role', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Pronouns</Label>
+                    <Input
+                      value={m.pronouns || ''}
+                      onChange={(e) => updateMember(m.id, 'pronouns', e.target.value)}
+                    />
+                  </div>
+                </div>
+              ))}
+              <Button variant="outline" onClick={addMember}>
+                Add Family Member
+              </Button>
+              <div className="space-y-2">
+                <Label>Conception Method</Label>
+                <Input
+                  value={familyData.conceptionMethod}
+                  onChange={(e) =>
+                    setFamilyData((d) => ({ ...d, conceptionMethod: e.target.value }))
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Donor Type</Label>
+                <Input
+                  value={familyData.donorType}
+                  onChange={(e) =>
+                    setFamilyData((d) => ({ ...d, donorType: e.target.value }))
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Surrogate Name</Label>
+                <Input
+                  value={familyData.surrogateName}
+                  onChange={(e) =>
+                    setFamilyData((d) => ({ ...d, surrogateName: e.target.value }))
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Family Story</Label>
+                <Textarea
+                  value={familyData.familyStory}
+                  onChange={(e) =>
+                    setFamilyData((d) => ({ ...d, familyStory: e.target.value }))
+                  }
+                />
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button onClick={handleSaveFamilyData}>Save Details</Button>
             </CardFooter>
           </Card>
         </TabsContent>

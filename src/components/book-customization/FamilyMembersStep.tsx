@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Trash2, User } from "lucide-react";
+import { getSavedFamilyData } from "@/hooks/useSavedFamilyData";
 
 type FamilyMember = {
   id: string;
@@ -27,6 +28,14 @@ const FamilyMembersStep = ({
   onChange
 }: FamilyMembersStepProps) => {
   const [members, setMembers] = useState<FamilyMember[]>(familyMembers || []);
+  const savedData = getSavedFamilyData();
+
+  const loadSavedMembers = () => {
+    if (savedData?.familyMembers?.length) {
+      setMembers(savedData.familyMembers);
+      onChange(savedData.familyMembers);
+    }
+  };
 
   // Define available roles based on family structure
   const getRoleOptions = () => {
@@ -138,6 +147,11 @@ const FamilyMembersStep = ({
         <p className="text-muted-foreground">
           Tell us about the people in your family who will appear in the book
         </p>
+        {savedData?.familyMembers?.length ? (
+          <Button variant="outline" className="mt-4" onClick={loadSavedMembers}>
+            Use Saved Members
+          </Button>
+        ) : null}
       </div>
 
       <div className="space-y-4">
