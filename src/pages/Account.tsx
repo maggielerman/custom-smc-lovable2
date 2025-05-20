@@ -18,6 +18,8 @@ import { supabaseClient } from "@/lib/supabase";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const Account = () => {
   const { user, signOut, isLoading } = useAuth();
@@ -92,10 +94,14 @@ const Account = () => {
   // Show loading state while authentication is being checked
   if (isLoading) {
     return (
-      <div className="container py-10">
-        <div className="flex justify-center items-center min-h-[300px]">
-          <div className="animate-pulse text-xl">Loading...</div>
-        </div>
+      <div className="flex flex-col min-h-screen">
+        <Navbar />
+        <main className="container py-10 flex-grow">
+          <div className="flex justify-center items-center min-h-[300px]">
+            <div className="animate-pulse text-xl">Loading...</div>
+          </div>
+        </main>
+        <Footer />
       </div>
     );
   }
@@ -103,23 +109,29 @@ const Account = () => {
   // Show login prompt if user is not authenticated
   if (!user) {
     return (
-      <div className="container py-10">
-        <h1 className="text-3xl font-bold mb-8">Your Account</h1>
-        <LoginPrompt />
+      <div className="flex flex-col min-h-screen">
+        <Navbar />
+        <main className="container py-10 flex-grow">
+          <h1 className="text-3xl font-bold mb-8">Your Account</h1>
+          <LoginPrompt />
+        </main>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="container py-10">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <main className="container py-10 flex-grow">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
         <h1 className="text-3xl font-bold">Your Account</h1>
         <Button variant="outline" onClick={signOut} className="mt-4 sm:mt-0">
           Sign Out
         </Button>
-      </div>
+        </div>
 
-      <Tabs defaultValue="drafts" className="w-full">
+        <Tabs defaultValue="drafts" className="w-full">
         <TabsList className="grid w-full grid-cols-4 mb-8">
           <TabsTrigger value="drafts" className="flex gap-2 items-center">
             <FileText className="h-4 w-4" />
@@ -243,6 +255,8 @@ const Account = () => {
           </Card>
         </TabsContent>
       </Tabs>
+      </main>
+      <Footer />
     </div>
   );
 };
