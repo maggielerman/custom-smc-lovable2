@@ -11,13 +11,22 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BookOpen, Settings, FileText, LogIn } from "lucide-react";
+import { BookOpen, Settings, FileText, LogIn, Users, Trash2 } from "lucide-react";
 import DraftsList from "@/components/DraftsList";
 import { useNavigate } from "react-router-dom";
 import { supabaseClient } from "@/lib/supabase";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  getSavedFamilyData,
+  saveFamilyData,
+  SavedFamilyMember,
+  SavedFamilyData,
+} from "@/hooks/useSavedFamilyData";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const Account = () => {
   const { user, signOut, isLoading } = useAuth();
@@ -26,6 +35,15 @@ const Account = () => {
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [profileLoading, setProfileLoading] = useState(false);
+  const [familyData, setFamilyData] = useState<SavedFamilyData>(() =>
+    getSavedFamilyData() || {
+      familyMembers: [],
+      conceptionMethod: "",
+      donorType: "",
+      surrogateName: "",
+      familyStory: "",
+    }
+  );
 
   useEffect(() => {
     if (!user) return;
@@ -73,6 +91,34 @@ const Account = () => {
     }
   };
 
+  const addMember = () => {
+    const newMember: SavedFamilyMember = {
+      id: crypto.randomUUID(),
+      role: "",
+      name: "",
+      pronouns: "",
+    };
+    setFamilyData((d) => ({ ...d, familyMembers: [...d.familyMembers, newMember] }));
+  };
+
+  const updateMember = (id: string, field: string, value: string) => {
+    setFamilyData((d) => ({
+      ...d,
+      familyMembers: d.familyMembers.map((m) => (m.id === id ? { ...m, [field]: value } : m)),
+    }));
+  };
+
+  const removeMember = (id: string) => {
+    setFamilyData((d) => ({
+      ...d,
+      familyMembers: d.familyMembers.filter((m) => m.id !== id),
+    }));
+  };
+
+  const handleSaveFamilyData = () => {
+    saveFamilyData(familyData);
+  };
+
   // Login prompt component
   const LoginPrompt = () => (
     <div className="flex flex-col items-center justify-center py-12 px-4">
@@ -92,10 +138,14 @@ const Account = () => {
   // Show loading state while authentication is being checked
   if (isLoading) {
     return (
-      <div className="container py-10">
-        <div className="flex justify-center items-center min-h-[300px]">
-          <div className="animate-pulse text-xl">Loading...</div>
-        </div>
+      <div className="flex flex-col min-h-screen">
+        <Navbar />
+        <main className="container py-10 flex-grow">
+          <div className="flex justify-center items-center min-h-[300px]">
+            <div className="animate-pulse text-xl">Loading...</div>
+          </div>
+        </main>
+        <Footer />
       </div>
     );
   }
@@ -103,24 +153,30 @@ const Account = () => {
   // Show login prompt if user is not authenticated
   if (!user) {
     return (
-      <div className="container py-10">
-        <h1 className="text-3xl font-bold mb-8">Your Account</h1>
-        <LoginPrompt />
+      <div className="flex flex-col min-h-screen">
+        <Navbar />
+        <main className="container py-10 flex-grow">
+          <h1 className="text-3xl font-bold mb-8">Your Account</h1>
+          <LoginPrompt />
+        </main>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="container py-10">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <main className="container py-10 flex-grow">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
         <h1 className="text-3xl font-bold">Your Account</h1>
         <Button variant="outline" onClick={signOut} className="mt-4 sm:mt-0">
           Sign Out
         </Button>
-      </div>
+        </div>
 
       <Tabs defaultValue="drafts" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 mb-8">
+        <TabsList className="grid w-full grid-cols-5 mb-8">
           <TabsTrigger value="drafts" className="flex gap-2 items-center">
             <FileText className="h-4 w-4" />
             <span className="hidden sm:inline">Saved Drafts</span>
@@ -134,6 +190,10 @@ const Account = () => {
           <TabsTrigger value="settings" className="flex gap-2 items-center">
             <Settings className="h-4 w-4" />
             <span>Settings</span>
+          </TabsTrigger>
+          <TabsTrigger value="family" className="flex gap-2 items-center">
+            <Users className="h-4 w-4" />
+            <span>Family Data</span>
           </TabsTrigger>
           <TabsTrigger value="profile" className="flex gap-2 items-center">
             <Avatar className="h-4 w-4">
@@ -160,6 +220,94 @@ const Account = () => {
               <Button asChild>
                 <Link to="/customize/">Create New Book</Link>
               </Button>
+            </CardFooter>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="family">
+          <Card>
+            <CardHeader>
+              <CardTitle>Saved Family Details</CardTitle>
+              <CardDescription>
+                Manage family members and conception journey info.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {familyData.familyMembers.map((m, i) => (
+                <div key={m.id} className="border p-4 rounded relative space-y-2">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="absolute top-2 right-2"
+                    onClick={() => removeMember(m.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                  <div className="space-y-2">
+                    <Label>Name</Label>
+                    <Input
+                      value={m.name}
+                      onChange={(e) => updateMember(m.id, 'name', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Role</Label>
+                    <Input
+                      value={m.role}
+                      onChange={(e) => updateMember(m.id, 'role', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Pronouns</Label>
+                    <Input
+                      value={m.pronouns || ''}
+                      onChange={(e) => updateMember(m.id, 'pronouns', e.target.value)}
+                    />
+                  </div>
+                </div>
+              ))}
+              <Button variant="outline" onClick={addMember}>
+                Add Family Member
+              </Button>
+              <div className="space-y-2">
+                <Label>Conception Method</Label>
+                <Input
+                  value={familyData.conceptionMethod}
+                  onChange={(e) =>
+                    setFamilyData((d) => ({ ...d, conceptionMethod: e.target.value }))
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Donor Type</Label>
+                <Input
+                  value={familyData.donorType}
+                  onChange={(e) =>
+                    setFamilyData((d) => ({ ...d, donorType: e.target.value }))
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Surrogate Name</Label>
+                <Input
+                  value={familyData.surrogateName}
+                  onChange={(e) =>
+                    setFamilyData((d) => ({ ...d, surrogateName: e.target.value }))
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Family Story</Label>
+                <Textarea
+                  value={familyData.familyStory}
+                  onChange={(e) =>
+                    setFamilyData((d) => ({ ...d, familyStory: e.target.value }))
+                  }
+                />
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button onClick={handleSaveFamilyData}>Save Details</Button>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -243,6 +391,8 @@ const Account = () => {
           </Card>
         </TabsContent>
       </Tabs>
+      </main>
+      <Footer />
     </div>
   );
 };
