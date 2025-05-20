@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BookOpen, User, Users, Palette, PenLine } from "lucide-react";
+import BookPagePreview from "./BookPagePreview";
 
 type ReviewStepProps = {
   bookData: any;
@@ -112,47 +113,8 @@ const ReviewStep = ({
                     <h3 className="text-xl font-bold mb-4">Book Preview</h3>
                     
                     <div className="prose max-w-none">
-                      <p>
-                        Based on your customizations, your book will feature:
-                      </p>
-                      <ul className="list-disc pl-5 space-y-2 mt-3">
-                        <li>
-                          <strong>Main character:</strong>{" "}
-                          {bookData.childName || "Your child"} 
-                          {bookData.childAge && ` (${bookData.childAge} ${parseInt(bookData.childAge) === 1 ? 'year' : 'years'} old)`}
-                          {bookData.childGender && `, ${bookData.childGender}`}
-                        </li>
-                        <li>
-                          <strong>Family structure:</strong> {getFamilyStructureLabel()}
-                        </li>
-                        <li>
-                          <strong>Family members:</strong>{" "}
-                          {bookData.familyMembers && bookData.familyMembers.length > 0 
-                            ? bookData.familyMembers
-                                .filter(member => member.name)
-                                .map(member => 
-                                  `${member.name} (${member.customRole || member.role})`
-                                )
-                                .join(", ")
-                            : "No family members added"
-                          }
-                        </li>
-                        {bookData.dedication && (
-                          <li>
-                            <strong>Dedication:</strong> "{bookData.dedication}"
-                          </li>
-                        )}
-                      </ul>
-                      
-                      <p className="mt-4">
-                        <strong>Book type:</strong> {template.name}
-                      </p>
-                      <p>
-                        <strong>Number of pages:</strong> {template.pages}
-                      </p>
-                      <p>
-                        <strong>Age range:</strong> {template.age_range}
-                      </p>
+                      <p className="mb-4">Preview of your personalized story:</p>
+                      <BookPagePreview template={template} bookData={bookData} />
                     </div>
                   </div>
                 </div>
