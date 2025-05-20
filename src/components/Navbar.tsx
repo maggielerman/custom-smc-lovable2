@@ -47,9 +47,6 @@ const Navbar = () => {
           <Link to="/how-it-works" className="text-gray-600 hover:text-primary transition-colors">
             How It Works
           </Link>
-          <Link to="/pricing" className="text-gray-600 hover:text-primary transition-colors">
-            Pricing
-          </Link>
           <Link to="/faq" className="text-gray-600 hover:text-primary transition-colors">
             FAQ
           </Link>
@@ -120,13 +117,6 @@ const Navbar = () => {
                 onClick={() => setIsOpen(false)}
               >
                 How It Works
-              </Link>
-              <Link
-                to="/pricing"
-                className="text-lg font-medium"
-                onClick={() => setIsOpen(false)}
-              >
-                Pricing
               </Link>
               <Link
                 to="/faq"
