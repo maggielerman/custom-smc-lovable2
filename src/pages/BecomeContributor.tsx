@@ -9,7 +9,9 @@ import { toast } from "sonner";
 
 const BecomeContributor = () => {
   const { user } = useAuth();
-  const [isContributor, setIsContributor] = useState(false);
+  const [isContributor, setIsContributor] = useState(() => {
+    return localStorage.getItem("is-contributor") === "true";
+  });
 
   useEffect(() => {
     if (!user) return;
@@ -19,7 +21,9 @@ const BecomeContributor = () => {
         .select("is_contributor")
         .eq("id", user.id)
         .maybeSingle();
-      setIsContributor(Boolean(data?.is_contributor));
+      const isContrib = Boolean(data?.is_contributor);
+      setIsContributor(isContrib);
+      localStorage.setItem("is-contributor", String(isContrib));
     };
     fetchProfile();
   }, [user]);
@@ -28,13 +32,16 @@ const BecomeContributor = () => {
     if (!user) return;
     const { error } = await supabaseClient
       .from("profiles")
-      .update({ is_contributor: true, updated_at: new Date().toISOString() })
-      .eq("id", user.id);
+      .upsert(
+        { id: user.id, is_contributor: true, updated_at: new Date().toISOString() },
+        { onConflict: "id", returning: "representation" }
+      );
     if (error) {
       toast.error("Failed to update profile");
     } else {
       toast.success("You are now a contributor!");
       setIsContributor(true);
+      localStorage.setItem("is-contributor", "true");
     }
   };
 
