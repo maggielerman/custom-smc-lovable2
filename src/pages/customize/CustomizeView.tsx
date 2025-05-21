@@ -22,6 +22,8 @@ interface CustomizeViewProps {
   handleBuyNow: () => void;
   handleBack: () => void;
   handleNext: () => void;
+  savedFamilies?: any[];
+  onLoadFamily?: (family: any) => void;
 }
 
 const CustomizeView: React.FC<CustomizeViewProps> = ({
@@ -37,6 +39,8 @@ const CustomizeView: React.FC<CustomizeViewProps> = ({
   handleBuyNow,
   handleBack,
   handleNext,
+  savedFamilies,
+  onLoadFamily,
 }) => {
   const book = {
     title: `${template?.name || "Your Child"}’s Story — ${(template as any)?.family_structure || "Family"} Book` +
@@ -119,6 +123,8 @@ const CustomizeView: React.FC<CustomizeViewProps> = ({
               handleBuyNow={handleBuyNow}
               handleBack={handleBack}
               handleNext={handleNext}
+              savedFamilies={savedFamilies}
+              onLoadFamily={onLoadFamily}
               template={template}
             />
           </div>

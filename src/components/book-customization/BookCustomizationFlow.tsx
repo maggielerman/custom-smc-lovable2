@@ -7,6 +7,8 @@ import ChildDetailsStep from "@/components/book-customization/ChildDetailsStep";
 import IllustrationStep from "@/components/book-customization/IllustrationStep";
 import ReviewStep from "@/components/book-customization/ReviewStep";
 import { ChevronRight, Save, ShoppingCart } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 interface BookCustomizationFlowProps {
   bookData: any;
@@ -21,6 +23,8 @@ interface BookCustomizationFlowProps {
   handleBack: () => void;
   handleNext: () => void;
   template: any;
+  savedFamilies?: any[];
+  onLoadFamily?: (family: any) => void;
 }
 
 const BookCustomizationFlow: React.FC<BookCustomizationFlowProps> = ({
@@ -36,6 +40,8 @@ const BookCustomizationFlow: React.FC<BookCustomizationFlowProps> = ({
   handleBack,
   handleNext,
   template,
+  savedFamilies,
+  onLoadFamily,
 }) => {
   const handleUpdateField = (field: string, value: any) => {
     setBookData((prev: any) => ({
@@ -53,10 +59,34 @@ const BookCustomizationFlow: React.FC<BookCustomizationFlowProps> = ({
         {template && (
           <>
             {currentStep === 0 && (
-              <FamilyStructureStep
-                value={bookData.familyStructure}
-                onChange={(value) => handleUpdateField("familyStructure", value)}
-              />
+              <>
+                {savedFamilies && savedFamilies.length > 0 && (
+                  <div className="mb-6 max-w-sm">
+                    <Label htmlFor="saved-family">Use Saved Family</Label>
+                    <Select
+                      onValueChange={(val) => {
+                        const fam = savedFamilies.find((f) => f.id === val);
+                        if (fam && onLoadFamily) onLoadFamily(fam);
+                      }}
+                    >
+                      <SelectTrigger id="saved-family">
+                        <SelectValue placeholder="Choose a saved family" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {savedFamilies.map((f) => (
+                          <SelectItem key={f.id} value={f.id}>
+                            {f.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                <FamilyStructureStep
+                  value={bookData.familyStructure}
+                  onChange={(value) => handleUpdateField("familyStructure", value)}
+                />
+              </>
             )}
             {currentStep === 1 && (
               <FamilyMembersStep

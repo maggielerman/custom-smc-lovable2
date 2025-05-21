@@ -22,6 +22,7 @@ const CustomizeBook = () => {
   const [filter, setFilter] = useState<Filter>({ donor_process: "", art_process: "", family_structure: "" });
   const [selectedStory, setSelectedStory] = useState<BookTemplate | null>(null);
   const { bookData, setBookData } = useBookData();
+  const [families, setFamilies] = useState<any[]>([]);
 
   const steps = [
     { label: "Family Structure", icon: <Users className="h-5 w-5" /> },
@@ -34,6 +35,18 @@ const CustomizeBook = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const bookId = queryParams.get("book");
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchFamilies = async () => {
+      const { data } = await supabaseClient
+        .from("families")
+        .select("*")
+        .eq("user_id", user.id);
+      setFamilies(data || []);
+    };
+    fetchFamilies();
+  }, [user]);
 
   useEffect(() => {
     if (bookId && user) {
@@ -70,6 +83,15 @@ const CustomizeBook = () => {
     } else {
       navigate(-1);
     }
+  };
+
+  const handleLoadFamily = (family: any) => {
+    if (!family) return;
+    setBookData((prev: any) => ({
+      ...prev,
+      familyStructure: family.structure,
+      familyMembers: family.members,
+    }));
   };
 
   const { handleSave, handleAddToCart, handleBuyNow } = useBookActions({
@@ -139,6 +161,8 @@ const CustomizeBook = () => {
       handleBuyNow={handleBuyNow}
       handleBack={handleBack}
       handleNext={handleNext}
+      savedFamilies={families}
+      onLoadFamily={handleLoadFamily}
     />
   );
 };

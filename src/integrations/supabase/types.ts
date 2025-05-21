@@ -116,6 +116,36 @@ export type Database = {
         }
         Relationships: []
       }
+      families: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          structure: string
+          members: Json
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          name: string
+          structure: string
+          members?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          name?: string
+          structure?: string
+          members?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
