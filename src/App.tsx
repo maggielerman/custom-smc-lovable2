@@ -20,6 +20,10 @@ import { supabaseClient } from "./lib/supabase";
 import { toast } from "sonner";
 import FAQ from "./pages/FAQ";
 import About from "./pages/About";
+import BlogHome from "./pages/BlogHome";
+import BlogPost from "./pages/BlogPost";
+import BlogEditor from "./pages/BlogEditor";
+import BecomeContributor from "./pages/BecomeContributor";
 
 const queryClient = new QueryClient();
 
@@ -43,7 +47,9 @@ const AppContent = () => {
       <Route path="/how-it-works" element={<HowItWorksPage />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/payment-success" element={<PaymentSuccess />} />
-      
+      <Route path="/blog" element={<BlogHome />} />
+      <Route path="/blog/:postId" element={<BlogPost />} />
+
       {/* Auth routes - only accessible when logged out */}
       <Route element={<AuthGuard requireAuth={false} redirectTo="/" />}>
         <Route path="/login" element={<Login />} />
@@ -55,6 +61,9 @@ const AppContent = () => {
       <Route path="/books/new" element={<Navigate to="/customize/" replace />} />
       <Route path="/customize/" element={<CustomizeBook />} />
       <Route path="/customize/:templateId" element={<CustomizeBook />} />
+      <Route path="/blog/new" element={<BlogEditor />} />
+      <Route path="/blog/:postId/edit" element={<BlogEditor />} />
+      <Route path="/become-contributor" element={<BecomeContributor />} />
       
       {/* Catch-all route */}
       <Route path="*" element={<NotFound />} />

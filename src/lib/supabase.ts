@@ -38,12 +38,33 @@ export type Database = {
           created_at: string
         }
       }
+      blog_posts: {
+        Row: {
+          id: string
+          created_at: string
+          updated_at: string
+          title: string
+          content: string
+          user_id: string
+          published: boolean
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          updated_at?: string
+          title: string
+          content: string
+          user_id: string
+          published?: boolean
+        }
+      }
       profiles: {
         Row: {
           id: string
           username: string | null
           display_name: string | null
           avatar_url: string | null
+          is_contributor: boolean
           created_at: string
           updated_at: string
         }
@@ -52,11 +73,13 @@ export type Database = {
           username?: string | null
           display_name?: string | null
           avatar_url?: string | null
+          is_contributor?: boolean
         }
         Update: {
           username?: string | null
           display_name?: string | null
           avatar_url?: string | null
+          is_contributor?: boolean
         }
       }
     }

@@ -83,12 +83,43 @@ export type Database = {
           },
         ]
       }
+      blog_posts: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          published: boolean
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          published?: boolean
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          published?: boolean
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
           created_at: string
           display_name: string | null
           id: string
+          is_contributor: boolean
           updated_at: string
           username: string | null
         }
@@ -97,6 +128,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id: string
+          is_contributor?: boolean
           updated_at?: string
           username?: string | null
         }
@@ -105,6 +137,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          is_contributor?: boolean
           updated_at?: string
           username?: string | null
         }
