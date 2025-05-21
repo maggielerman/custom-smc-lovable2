@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { supabaseClient } from "@/lib/supabase";
+import { DUMMY_BLOG_POSTS } from "@/lib/dummyBlogPosts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 
@@ -22,7 +23,17 @@ const BlogHome = () => {
         .select("id, title, created_at")
         .eq("published", true)
         .order("created_at", { ascending: false });
-      setPosts(data || []);
+      if (data && data.length > 0) {
+        setPosts(data);
+      } else {
+        setPosts(
+          DUMMY_BLOG_POSTS.map(({ id, title, created_at }) => ({
+            id,
+            title,
+            created_at,
+          }))
+        );
+      }
     };
     fetchPosts();
   }, []);
