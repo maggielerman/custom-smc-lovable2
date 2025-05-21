@@ -9,7 +9,12 @@ import { toast } from "sonner";
 
 const BecomeContributor = () => {
   const { user } = useAuth();
-  const [isContributor, setIsContributor] = useState(false);
+  const [isContributor, setIsContributor] = useState(() => {
+    if (typeof localStorage !== "undefined") {
+      return localStorage.getItem("isContributor") === "true";
+    }
+    return false;
+  });
 
   useEffect(() => {
     if (!user) return;
@@ -19,7 +24,11 @@ const BecomeContributor = () => {
         .select("is_contributor")
         .eq("id", user.id)
         .maybeSingle();
-      setIsContributor(Boolean(data?.is_contributor));
+      const contributor = Boolean(data?.is_contributor);
+      setIsContributor(contributor);
+      if (typeof localStorage !== "undefined") {
+        localStorage.setItem("isContributor", String(contributor));
+      }
     };
     fetchProfile();
   }, [user]);
@@ -37,6 +46,9 @@ const BecomeContributor = () => {
     } else {
       toast.success("You are now a contributor!");
       setIsContributor(true);
+      if (typeof localStorage !== "undefined") {
+        localStorage.setItem("isContributor", "true");
+      }
     }
   };
 
