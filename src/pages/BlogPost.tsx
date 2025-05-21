@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { supabaseClient } from "@/lib/supabase";
+import { DUMMY_BLOG_POSTS } from "@/lib/dummyBlogPosts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 
@@ -25,12 +26,25 @@ const BlogPost = () => {
         .eq("id", postId)
         .eq("published", true)
         .maybeSingle();
-      setPost(data);
+      if (data) {
+        setPost(data);
+      } else {
+        const fallback = DUMMY_BLOG_POSTS.find((p) => p.id === postId);
+        if (fallback) setPost(fallback);
+      }
     };
     if (postId) fetchPost();
   }, [postId]);
 
-  if (!post) return null;
+  if (!post) {
+    return (
+      <div className="flex flex-col min-h-screen">
+        <Navbar />
+        <main className="container py-10 flex-grow">Post not found</main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
