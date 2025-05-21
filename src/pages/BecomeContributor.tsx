@@ -28,8 +28,10 @@ const BecomeContributor = () => {
     if (!user) return;
     const { error } = await supabaseClient
       .from("profiles")
-      .update({ is_contributor: true, updated_at: new Date().toISOString() })
-      .eq("id", user.id);
+      .upsert(
+        { id: user.id, is_contributor: true, updated_at: new Date().toISOString() },
+        { onConflict: "id" }
+      );
     if (error) {
       toast.error("Failed to update profile");
     } else {
