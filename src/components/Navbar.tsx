@@ -53,6 +53,9 @@ const Navbar = () => {
           <Link to="/about" className="text-gray-600 hover:text-primary transition-colors">
             About Us
           </Link>
+          <Link to="/blog" className="text-gray-600 hover:text-primary transition-colors">
+            Blog
+          </Link>
 
           {/* Add Cart Icon */}
           <CartIndicator />
@@ -131,6 +134,13 @@ const Navbar = () => {
                 onClick={() => setIsOpen(false)}
               >
                 About Us
+              </Link>
+              <Link
+                to="/blog"
+                className="text-lg font-medium"
+                onClick={() => setIsOpen(false)}
+              >
+                Blog
               </Link>
               <Link
                 to="/cart"

@@ -13,6 +13,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BookOpen, Settings, FileText, LogIn } from "lucide-react";
 import DraftsList from "@/components/DraftsList";
+import BlogDraftsList from "@/components/BlogDraftsList";
 import { useNavigate } from "react-router-dom";
 import { supabaseClient } from "@/lib/supabase";
 import { Input } from "@/components/ui/input";
@@ -24,9 +25,10 @@ import Footer from "@/components/Footer";
 const Account = () => {
   const { user, signOut, isLoading } = useAuth();
   const navigate = useNavigate();
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState<any>(null);
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
+  const [isContributor, setIsContributor] = useState(false);
   const [profileLoading, setProfileLoading] = useState(false);
 
   useEffect(() => {
@@ -44,6 +46,7 @@ const Account = () => {
           setProfile(data);
           setUsername(data.username || "");
           setDisplayName(data.display_name || "");
+          setIsContributor(Boolean(data.is_contributor));
         }
       } catch (error) {
         // handle error
@@ -63,11 +66,12 @@ const Account = () => {
         .update({
           username,
           display_name: displayName,
+          is_contributor: isContributor,
           updated_at: new Date().toISOString(),
         })
         .eq("id", user.id);
       if (error) throw error;
-      setProfile({ ...profile, username, display_name: displayName });
+      setProfile({ ...profile, username, display_name: displayName, is_contributor: isContributor });
     } catch (error) {
       // handle error
     } finally {
@@ -132,7 +136,7 @@ const Account = () => {
         </div>
 
         <Tabs defaultValue="drafts" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 mb-8">
+        <TabsList className={`grid w-full mb-8 ${isContributor ? 'grid-cols-5' : 'grid-cols-4'}`}>
           <TabsTrigger value="drafts" className="flex gap-2 items-center">
             <FileText className="h-4 w-4" />
             <span className="hidden sm:inline">Saved Drafts</span>
@@ -143,6 +147,12 @@ const Account = () => {
             <span className="hidden sm:inline">Published Books</span>
             <span className="sm:hidden">Books</span>
           </TabsTrigger>
+          {isContributor && (
+            <TabsTrigger value="blog" className="flex gap-2 items-center">
+              <FileText className="h-4 w-4" />
+              <span>Blog</span>
+            </TabsTrigger>
+          )}
           <TabsTrigger value="settings" className="flex gap-2 items-center">
             <Settings className="h-4 w-4" />
             <span>Settings</span>
@@ -189,6 +199,25 @@ const Account = () => {
             </CardContent>
           </Card>
         </TabsContent>
+
+        {isContributor && (
+          <TabsContent value="blog">
+            <Card>
+              <CardHeader>
+                <CardTitle>Your Blog Posts</CardTitle>
+                <CardDescription>Manage your blog drafts and posts.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <BlogDraftsList published={false} />
+              </CardContent>
+              <CardFooter>
+                <Button asChild>
+                  <Link to="/blog/new">Create New Post</Link>
+                </Button>
+              </CardFooter>
+            </Card>
+          </TabsContent>
+        )}
 
         <TabsContent value="settings">
           <Card>
@@ -248,6 +277,20 @@ const Account = () => {
                 <Label htmlFor="displayName">Display Name</Label>
                 <Input id="displayName" value={displayName} onChange={e => setDisplayName(e.target.value)} placeholder="Enter your display name" />
               </div>
+              <div className="flex items-center space-x-2">
+                <input
+                  id="isContributor"
+                  type="checkbox"
+                  checked={isContributor}
+                  onChange={(e) => setIsContributor(e.target.checked)}
+                />
+                <Label htmlFor="isContributor">Contributor</Label>
+              </div>
+              {!isContributor && (
+                <p className="text-xs text-muted-foreground">
+                  Want to write for us? <Link to="/become-contributor" className="underline">Become a contributor</Link>
+                </p>
+              )}
             </CardContent>
             <CardFooter>
               <Button onClick={updateProfile} disabled={profileLoading}>{profileLoading ? "Saving..." : "Save Changes"}</Button>
