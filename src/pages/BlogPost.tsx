@@ -11,6 +11,7 @@ interface Post {
   title: string;
   content: string;
   created_at: string;
+  featured_image_url: string | null;
 }
 
 const BlogPost = () => {
@@ -21,7 +22,7 @@ const BlogPost = () => {
     const fetchPost = async () => {
       const { data } = await supabaseClient
         .from("blog_posts")
-        .select("id, title, content, created_at")
+        .select("id, title, content, created_at, featured_image_url")
         .eq("id", postId)
         .eq("published", true)
         .maybeSingle();
@@ -42,6 +43,13 @@ const BlogPost = () => {
             <p className="text-sm text-muted-foreground mb-4">
               {format(new Date(post.created_at), "PPP")}
             </p>
+            {post.featured_image_url && (
+              <img
+                src={post.featured_image_url}
+                alt="Featured"
+                className="max-h-80 w-full object-cover rounded"
+              />
+            )}
           </CardHeader>
           <CardContent>
             <div className="prose" dangerouslySetInnerHTML={{ __html: post.content }} />

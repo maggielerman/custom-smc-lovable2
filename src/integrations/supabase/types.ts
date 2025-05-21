@@ -91,6 +91,7 @@ export type Database = {
           published: boolean
           title: string
           updated_at: string
+          featured_image_url: string | null
           user_id: string
         }
         Insert: {
@@ -100,6 +101,7 @@ export type Database = {
           published?: boolean
           title: string
           updated_at?: string
+          featured_image_url?: string | null
           user_id: string
         }
         Update: {
@@ -109,6 +111,7 @@ export type Database = {
           published?: boolean
           title?: string
           updated_at?: string
+          featured_image_url?: string | null
           user_id?: string
         }
         Relationships: []
