@@ -58,6 +58,35 @@ export type Database = {
           published?: boolean
         }
       }
+      families: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          structure: string
+          members: any
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          name: string
+          structure: string
+          members?: any
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          name?: string
+          structure?: string
+          members?: any
+          created_at?: string
+          updated_at?: string
+        }
+      }
       profiles: {
         Row: {
           id: string

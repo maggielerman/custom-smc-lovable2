@@ -11,9 +11,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BookOpen, Settings, FileText, LogIn } from "lucide-react";
+import { BookOpen, Settings, FileText, LogIn, Users } from "lucide-react";
 import DraftsList from "@/components/DraftsList";
 import BlogDraftsList from "@/components/BlogDraftsList";
+import FamiliesList from "@/components/FamiliesList";
 import { useNavigate } from "react-router-dom";
 import { supabaseClient } from "@/lib/supabase";
 import { Input } from "@/components/ui/input";
@@ -136,7 +137,7 @@ const Account = () => {
         </div>
 
         <Tabs defaultValue="drafts" className="w-full">
-        <TabsList className={`grid w-full mb-8 ${isContributor ? 'grid-cols-5' : 'grid-cols-4'}`}>
+        <TabsList className={`grid w-full mb-8 ${isContributor ? 'grid-cols-6' : 'grid-cols-5'}`}>
           <TabsTrigger value="drafts" className="flex gap-2 items-center">
             <FileText className="h-4 w-4" />
             <span className="hidden sm:inline">Saved Drafts</span>
@@ -148,15 +149,19 @@ const Account = () => {
             <span className="sm:hidden">Books</span>
           </TabsTrigger>
           {isContributor && (
-            <TabsTrigger value="blog" className="flex gap-2 items-center">
-              <FileText className="h-4 w-4" />
-              <span>Blog</span>
-            </TabsTrigger>
-          )}
-          <TabsTrigger value="settings" className="flex gap-2 items-center">
-            <Settings className="h-4 w-4" />
-            <span>Settings</span>
+          <TabsTrigger value="blog" className="flex gap-2 items-center">
+            <FileText className="h-4 w-4" />
+            <span>Blog</span>
           </TabsTrigger>
+        )}
+        <TabsTrigger value="families" className="flex gap-2 items-center">
+          <Users className="h-4 w-4" />
+          <span>Families</span>
+        </TabsTrigger>
+        <TabsTrigger value="settings" className="flex gap-2 items-center">
+          <Settings className="h-4 w-4" />
+          <span>Settings</span>
+        </TabsTrigger>
           <TabsTrigger value="profile" className="flex gap-2 items-center">
             <Avatar className="h-4 w-4">
               <AvatarFallback>
@@ -218,6 +223,18 @@ const Account = () => {
             </Card>
           </TabsContent>
         )}
+
+        <TabsContent value="families">
+          <Card>
+            <CardHeader>
+              <CardTitle>Your Families</CardTitle>
+              <CardDescription>Save family details for quick book customization.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <FamiliesList />
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         <TabsContent value="settings">
           <Card>
