@@ -45,6 +45,7 @@ export type Database = {
           updated_at: string
           title: string
           content: string
+          featured_image_url: string | null
           user_id: string
           published: boolean
         }
@@ -54,6 +55,7 @@ export type Database = {
           updated_at?: string
           title: string
           content: string
+          featured_image_url?: string | null
           user_id: string
           published?: boolean
         }
