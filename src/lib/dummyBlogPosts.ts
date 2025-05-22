@@ -3,6 +3,7 @@ export interface BlogPost {
   title: string;
   content: string;
   created_at: string;
+  featured_image_url?: string | null;
 }
 
 export const DUMMY_BLOG_POSTS: BlogPost[] = [

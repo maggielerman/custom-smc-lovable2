@@ -212,8 +212,15 @@ const Account = () => {
                 <CardTitle>Your Blog Posts</CardTitle>
                 <CardDescription>Manage your blog drafts and posts.</CardDescription>
               </CardHeader>
-              <CardContent>
-                <BlogDraftsList published={false} />
+              <CardContent className="space-y-8">
+                <div>
+                  <h3 className="font-semibold mb-2">Drafts</h3>
+                  <BlogDraftsList published={false} />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">Published Posts</h3>
+                  <BlogDraftsList published={true} />
+                </div>
               </CardContent>
               <CardFooter>
                 <Button asChild>

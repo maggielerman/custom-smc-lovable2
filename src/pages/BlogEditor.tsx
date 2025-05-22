@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 
 const BlogEditor = () => {
@@ -20,6 +21,7 @@ const BlogEditor = () => {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [featuredImageUrl, setFeaturedImageUrl] = useState<string | null>(null);
+  const [isPublished, setIsPublished] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -27,7 +29,7 @@ const BlogEditor = () => {
       const fetchPost = async () => {
         const { data } = await supabaseClient
           .from("blog_posts")
-          .select("title, content, featured_image_url")
+          .select("title, content, featured_image_url, published")
           .eq("id", postId)
           .eq("user_id", user.id)
           .maybeSingle();
@@ -35,6 +37,7 @@ const BlogEditor = () => {
           setTitle(data.title);
           setContent(data.content);
           setFeaturedImageUrl(data.featured_image_url || null);
+          setIsPublished(data.published);
         }
       };
       fetchPost();
@@ -89,17 +92,19 @@ const BlogEditor = () => {
             title,
             content,
             featured_image_url: featuredImageUrl,
+            published: isPublished,
             updated_at: new Date().toISOString(),
           })
           .eq("id", postId)
           .eq("user_id", user.id);
-      if (error) throw error;
+        if (error) throw error;
       } else {
         const { error } = await supabaseClient.from("blog_posts").insert({
           title,
           content,
           featured_image_url: featuredImageUrl,
           user_id: user.id,
+          published: isPublished,
         });
         if (error) throw error;
       }
@@ -166,6 +171,10 @@ const BlogEditor = () => {
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
               />
+            </div>
+            <div className="flex items-center space-x-2">
+              <Switch id="published" checked={isPublished} onCheckedChange={setIsPublished} />
+              <Label htmlFor="published">Published</Label>
             </div>
             <div className="space-y-2">
               <Label htmlFor="insertImage">Insert Image</Label>
