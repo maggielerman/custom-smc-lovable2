@@ -71,6 +71,28 @@ const BlogDraftsList = ({ published }: BlogDraftsListProps) => {
     }
   };
 
+  const togglePublish = async (id: string, publish: boolean) => {
+    try {
+      const { error } = await supabaseClient
+        .from("blog_posts")
+        .update({ published: publish, updated_at: new Date().toISOString() })
+        .eq("id", id)
+        .eq("user_id", user!.id);
+      if (error) throw error;
+      if (published !== undefined && published !== publish) {
+        setPosts((prev) => prev.filter((p) => p.id !== id));
+      } else {
+        setPosts((prev) =>
+          prev.map((p) => (p.id === id ? { ...p, published: publish } : p))
+        );
+      }
+      toast.success(publish ? "Post published" : "Post unpublished");
+    } catch (err: any) {
+      console.error("Publish error:", err);
+      toast.error("Failed to update post");
+    }
+  };
+
   if (!user) {
     return (
       <div className="text-center py-6">
@@ -122,6 +144,13 @@ const BlogDraftsList = ({ published }: BlogDraftsListProps) => {
                 <EditIcon className="h-4 w-4" />
                 <span>Edit</span>
               </Link>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => togglePublish(post.id, !post.published)}
+            >
+              {post.published ? "Unpublish" : "Publish"}
             </Button>
             <Button variant="outline" size="sm" className="text-destructive hover:text-destructive" onClick={() => deletePost(post.id)}>
               <Trash2 className="h-4 w-4" />

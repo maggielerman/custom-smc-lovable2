@@ -12,7 +12,7 @@ interface Post {
   title: string;
   content: string;
   created_at: string;
-  featured_image_url: string | null;
+  featured_image_url?: string | null;
 }
 
 const BlogPost = () => {
