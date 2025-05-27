@@ -25,6 +25,7 @@ interface BookCustomizationFlowProps {
   template: any;
   savedFamilies?: any[];
   onLoadFamily?: (family: any) => void;
+  handleSaveFamily?: () => void;
 }
 
 const BookCustomizationFlow: React.FC<BookCustomizationFlowProps> = ({
@@ -42,6 +43,7 @@ const BookCustomizationFlow: React.FC<BookCustomizationFlowProps> = ({
   template,
   savedFamilies,
   onLoadFamily,
+  handleSaveFamily,
 }) => {
   const handleUpdateField = (field: string, value: any) => {
     setBookData((prev: any) => ({
@@ -145,6 +147,12 @@ const BookCustomizationFlow: React.FC<BookCustomizationFlowProps> = ({
             {currentStep === 0 ? "Cancel" : "Back"}
           </Button>
           <div className="space-x-3">
+            {currentStep === 1 && handleSaveFamily && (
+              <Button variant="outline" onClick={handleSaveFamily} disabled={saving}>
+                <Save className="h-4 w-4 mr-2" />
+                Save Family
+              </Button>
+            )}
             {currentStep === steps.length - 1 ? (
               <>
                 <Button
