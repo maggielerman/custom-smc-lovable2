@@ -23,6 +23,7 @@ const CustomizeBook = () => {
   const [selectedStory, setSelectedStory] = useState<BookTemplate | null>(null);
   const { bookData, setBookData } = useBookData();
   const [families, setFamilies] = useState<any[]>([]);
+  const [selectedFamilyId, setSelectedFamilyId] = useState<string | null>(null);
 
   const steps = [
     { label: "Family Structure", icon: <Users className="h-5 w-5" /> },
@@ -87,11 +88,61 @@ const CustomizeBook = () => {
 
   const handleLoadFamily = (family: any) => {
     if (!family) return;
+    setSelectedFamilyId(family.id);
     setBookData((prev: any) => ({
       ...prev,
       familyStructure: family.structure,
       familyMembers: family.members,
     }));
+  };
+
+  const handleSaveFamily = async () => {
+    if (!user) return;
+    if (!bookData.familyStructure || (bookData.familyMembers || []).length === 0)
+      return;
+    const name = window.prompt('Family name', 'My Family');
+    if (name === null) return;
+    try {
+      setSaving(true);
+      let data, error;
+      if (selectedFamilyId) {
+        ({ data, error } = await supabaseClient
+          .from('families')
+          .update({
+            name,
+            structure: bookData.familyStructure,
+            members: bookData.familyMembers,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', selectedFamilyId)
+          .select()
+          .single());
+      } else {
+        ({ data, error } = await supabaseClient
+          .from('families')
+          .insert({
+            name,
+            structure: bookData.familyStructure,
+            members: bookData.familyMembers,
+            user_id: user.id,
+          })
+          .select()
+          .single());
+      }
+      if (error) throw error;
+      if (selectedFamilyId) {
+        setFamilies((prev) => prev.map((f) => (f.id === selectedFamilyId ? data : f)));
+      } else {
+        setFamilies((prev) => [data, ...prev]);
+        setSelectedFamilyId(data.id);
+      }
+      toast.success('Family saved');
+    } catch (err: any) {
+      console.error('Error saving family:', err);
+      toast.error('Failed to save family');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const { handleSave, handleAddToCart, handleBuyNow } = useBookActions({
@@ -163,6 +214,7 @@ const CustomizeBook = () => {
       handleNext={handleNext}
       savedFamilies={families}
       onLoadFamily={handleLoadFamily}
+      handleSaveFamily={handleSaveFamily}
     />
   );
 };
