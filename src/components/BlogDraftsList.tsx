@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -34,6 +35,12 @@ const BlogDraftsList = ({ published }: BlogDraftsListProps) => {
     }
 
     const fetchPosts = async () => {
+      if (!supabaseClient) {
+        console.error("Supabase client not available");
+        setLoading(false);
+        return;
+      }
+
       try {
         setLoading(true);
         let query = supabaseClient
@@ -60,6 +67,8 @@ const BlogDraftsList = ({ published }: BlogDraftsListProps) => {
 
   const deletePost = async (id: string) => {
     if (!confirm("Are you sure you want to delete this post?")) return;
+    if (!supabaseClient) return;
+    
     try {
       const { error } = await supabaseClient.from("blog_posts").delete().eq("id", id);
       if (error) throw error;
@@ -72,12 +81,14 @@ const BlogDraftsList = ({ published }: BlogDraftsListProps) => {
   };
 
   const togglePublish = async (id: string, publish: boolean) => {
+    if (!supabaseClient || !user) return;
+    
     try {
       const { error } = await supabaseClient
         .from("blog_posts")
         .update({ published: publish, updated_at: new Date().toISOString() })
         .eq("id", id)
-        .eq("user_id", user!.id);
+        .eq("user_id", user.id);
       if (error) throw error;
       if (published !== undefined && published !== publish) {
         setPosts((prev) => prev.filter((p) => p.id !== id));

@@ -1,3 +1,4 @@
+
 import { useEffect, useState, useRef, ChangeEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -25,7 +26,7 @@ const BlogEditor = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (postId && user) {
+    if (postId && user && supabaseClient) {
       const fetchPost = async () => {
         const { data } = await supabaseClient
           .from("blog_posts")
@@ -82,7 +83,7 @@ const BlogEditor = () => {
   };
 
   const handleSave = async () => {
-    if (!user) return;
+    if (!user || !supabaseClient) return;
     try {
       setLoading(true);
       if (postId) {

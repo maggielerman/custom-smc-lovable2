@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -16,26 +17,28 @@ interface Post {
 }
 
 const BlogPost = () => {
-  const { postId } = useParams();
+  const { slug } = useParams();
   const [post, setPost] = useState<Post | null>(null);
 
   useEffect(() => {
     const fetchPost = async () => {
+      if (!supabaseClient || !slug) return;
+      
       const { data } = await supabaseClient
         .from("blog_posts")
         .select("id, title, content, created_at, featured_image_url")
-        .eq("id", postId)
+        .eq("id", slug)
         .eq("published", true)
         .maybeSingle();
       if (data) {
         setPost(data);
       } else {
-        const fallback = DUMMY_BLOG_POSTS.find((p) => p.id === postId);
+        const fallback = DUMMY_BLOG_POSTS.find((p) => p.id === slug);
         if (fallback) setPost(fallback);
       }
     };
-    if (postId) fetchPost();
-  }, [postId]);
+    if (slug) fetchPost();
+  }, [slug]);
 
   if (!post) {
     return (

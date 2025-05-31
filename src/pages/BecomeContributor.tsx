@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -17,7 +18,7 @@ const BecomeContributor = () => {
   });
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || !supabaseClient) return;
     const fetchProfile = async () => {
       const { data } = await supabaseClient
         .from("profiles")
@@ -34,7 +35,7 @@ const BecomeContributor = () => {
   }, [user]);
 
   const becomeContributor = async () => {
-    if (!user) return;
+    if (!user || !supabaseClient) return;
     const { error } = await supabaseClient
       .from("profiles")
       .upsert(

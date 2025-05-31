@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -20,6 +21,19 @@ const BlogHome = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
+      if (!supabaseClient) {
+        setPosts(
+          DUMMY_BLOG_POSTS.map(({ id, title, created_at, content, featured_image_url }) => ({
+            id,
+            title,
+            created_at,
+            content,
+            featured_image_url,
+          }))
+        );
+        return;
+      }
+
       const { data } = await supabaseClient
         .from("blog_posts")
         .select("id, title, created_at, content, featured_image_url")

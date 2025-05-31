@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Index from "./pages/Index";
@@ -12,10 +13,10 @@ import Cart from "./pages/Cart";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import NotFound from "./pages/NotFound";
 import { useAuth } from "@/hooks/useAuth";
-import BlogHome from "./pages/blog/BlogHome";
-import BlogPost from "./pages/blog/BlogPost";
-import BlogEditor from "./pages/blog/BlogEditor";
-import BecomeContributor from "./pages/blog/BecomeContributor";
+import BlogHome from "./pages/BlogHome";
+import BlogPost from "./pages/BlogPost";
+import BlogEditor from "./pages/BlogEditor";
+import BecomeContributor from "./pages/BecomeContributor";
 import FamilyTreeBuilder from "./pages/FamilyTreeBuilder";
 
 function App() {
