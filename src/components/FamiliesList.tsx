@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabaseClient } from "@/lib/supabase";
@@ -38,13 +39,21 @@ const FamiliesList = () => {
     const fetchFamilies = async () => {
       try {
         setLoading(true);
+        if (!supabaseClient) {
+          throw new Error("Supabase client not available");
+        }
         const { data, error } = await supabaseClient
           .from("families")
           .select("*")
           .eq("user_id", user.id)
           .order("created_at", { ascending: false });
         if (error) throw error;
-        setFamilies(data || []);
+        // Type cast the data to match our Family type
+        const typedData = (data || []).map(item => ({
+          ...item,
+          members: Array.isArray(item.members) ? item.members : []
+        }));
+        setFamilies(typedData);
       } catch (err: any) {
         console.error("Error loading families:", err);
         toast.error("Failed to load families");
@@ -56,7 +65,7 @@ const FamiliesList = () => {
   }, [user]);
 
   const saveFamily = async () => {
-    if (!user) return;
+    if (!user || !supabaseClient) return;
     try {
       setSaving(true);
       const { data, error } = await supabaseClient
@@ -70,7 +79,12 @@ const FamiliesList = () => {
         .select()
         .single();
       if (error) throw error;
-      setFamilies([data, ...families]);
+      // Type cast the returned data
+      const typedData = {
+        ...data,
+        members: Array.isArray(data.members) ? data.members : []
+      };
+      setFamilies([typedData, ...families]);
       setNewFamily({ name: "", structure: "", members: [] });
       toast.success("Family saved");
     } catch (err: any) {
@@ -82,7 +96,7 @@ const FamiliesList = () => {
   };
 
   const deleteFamily = async (id: string) => {
-    if (!user) return;
+    if (!user || !supabaseClient) return;
     if (!confirm("Delete this family?")) return;
     try {
       const { error } = await supabaseClient.from("families").delete().eq("id", id);

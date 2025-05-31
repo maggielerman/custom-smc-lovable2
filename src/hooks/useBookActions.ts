@@ -1,3 +1,4 @@
+
 import { useCallback } from "react";
 import { supabaseClient, getSupabaseClient } from "@/lib/supabase";
 
@@ -52,6 +53,13 @@ export function useBookActions({
     } catch (error: any) {
       console.error("Error saving book:", error);
       if (error.message?.includes('Supabase client is not initialized')) {
+        const book = {
+          title: bookData.title || selectedStory?.name || "Untitled Book",
+          content: bookData,
+          template_id: selectedStory?.id,
+          user_id: user.id,
+          published: publish,
+        };
         const localDrafts = JSON.parse(localStorage.getItem('local-drafts') || '[]');
         const id = bookId || crypto.randomUUID();
         const draft = { ...book, id };
@@ -85,4 +93,4 @@ export function useBookActions({
   }, [handleAddToCart, navigate]);
 
   return { handleSave, handleAddToCart, handleBuyNow };
-} 
+}

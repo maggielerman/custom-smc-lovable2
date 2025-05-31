@@ -64,7 +64,7 @@ const FamilyTreeBuilder = () => {
   }, [user]);
 
   const loadSavedTrees = async () => {
-    if (!user) return;
+    if (!user || !supabaseClient) return;
     try {
       const { data, error } = await supabaseClient
         .from("family_trees")
@@ -73,7 +73,15 @@ const FamilyTreeBuilder = () => {
         .order("updated_at", { ascending: false });
       
       if (error) throw error;
-      setSavedTrees(data || []);
+      // Transform the database data to match our FamilyTree type
+      const transformedData = (data || []).map(item => ({
+        id: item.id,
+        name: item.name,
+        people: (item.tree_data as any)?.people || [],
+        relationships: (item.tree_data as any)?.relationships || [],
+        isPublic: item.is_public,
+      }));
+      setSavedTrees(transformedData);
     } catch (err: any) {
       console.error("Error loading family trees:", err);
       toast.error("Failed to load saved family trees");
@@ -83,6 +91,11 @@ const FamilyTreeBuilder = () => {
   const saveFamilyTree = async () => {
     if (!user) {
       toast.error("Please sign in to save your family tree");
+      return;
+    }
+
+    if (!supabaseClient) {
+      toast.error("Database connection not available");
       return;
     }
 
@@ -131,9 +144,9 @@ const FamilyTreeBuilder = () => {
     setFamilyTree({
       id: tree.id,
       name: tree.name,
-      people: tree.tree_data?.people || [],
-      relationships: tree.tree_data?.relationships || [],
-      isPublic: tree.is_public,
+      people: tree.people || [],
+      relationships: tree.relationships || [],
+      isPublic: tree.isPublic,
     });
   };
 
@@ -283,7 +296,7 @@ const FamilyTreeBuilder = () => {
                       onClick={() => loadFamilyTree(tree)}
                     >
                       {tree.name}
-                      {tree.is_public && (
+                      {tree.isPublic && (
                         <Badge variant="secondary" className="ml-auto">
                           Public
                         </Badge>
