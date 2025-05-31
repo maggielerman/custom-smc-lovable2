@@ -9,6 +9,39 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      blog_posts: {
+        Row: {
+          content: string
+          created_at: string
+          featured_image_url: string | null
+          id: string
+          published: boolean
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          featured_image_url?: string | null
+          id?: string
+          published?: boolean
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          featured_image_url?: string | null
+          id?: string
+          published?: boolean
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       book_templates: {
         Row: {
           age_range: string
@@ -86,12 +119,73 @@ export type Database = {
           },
         ]
       }
+      families: {
+        Row: {
+          created_at: string
+          id: string
+          members: Json
+          name: string
+          structure: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          members?: Json
+          name: string
+          structure: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          members?: Json
+          name?: string
+          structure?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      family_trees: {
+        Row: {
+          created_at: string
+          id: string
+          is_public: boolean
+          name: string
+          tree_data: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_public?: boolean
+          name: string
+          tree_data?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_public?: boolean
+          name?: string
+          tree_data?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
           created_at: string
           display_name: string | null
           id: string
+          is_contributor: boolean
           updated_at: string
           username: string | null
         }
@@ -100,6 +194,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id: string
+          is_contributor?: boolean
           updated_at?: string
           username?: string | null
         }
@@ -108,6 +203,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          is_contributor?: boolean
           updated_at?: string
           username?: string | null
         }

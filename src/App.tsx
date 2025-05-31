@@ -35,27 +35,25 @@ function App() {
   }, [session, location, isLoading]);
 
   return (
-    <>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/how-it-works" element={<HowItWorksPage />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/customize" element={<CustomizeBook />} />
-          <Route path="/customize/:templateId" element={<CustomizeBook />} />
-          <Route path="/account" element={<Account />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/payment-success" element={<PaymentSuccess />} />
-          <Route path="/blog" element={<BlogHome />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
-          <Route path="/blog-editor" element={<BlogEditor />} />
-          <Route path="/become-contributor" element={<BecomeContributor />} />
-          <Route path="/family-tree" element={<FamilyTreeBuilder />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-    </>
+    <Routes>
+      <Route path="/" element={<Index />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/how-it-works" element={<HowItWorksPage />} />
+      <Route path="/faq" element={<FAQ />} />
+      <Route path="/customize" element={<CustomizeBook />} />
+      <Route path="/customize/:templateId" element={<CustomizeBook />} />
+      <Route path="/account" element={<Account />} />
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/payment-success" element={<PaymentSuccess />} />
+      <Route path="/blog" element={<BlogHome />} />
+      <Route path="/blog/:slug" element={<BlogPost />} />
+      <Route path="/blog-editor" element={<BlogEditor />} />
+      <Route path="/become-contributor" element={<BecomeContributor />} />
+      <Route path="/family-tree" element={<FamilyTreeBuilder />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 
