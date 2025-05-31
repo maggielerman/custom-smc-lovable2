@@ -1,183 +1,129 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuContent,
+  NavigationMenuTrigger,
+  NavigationMenuLink,
+} from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { 
-  Menu, 
-  User,
-  LogOut,
-  BookOpen 
-} from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import CartIndicator from "./CartIndicator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { BookOpen, Users } from "lucide-react";
+import { ModeToggle } from "@/components/ModeToggle";
 
 const Navbar = () => {
   const { user, signOut } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const handleSignOut = async () => {
-    await signOut();
-  };
-
-  const getInitials = (email: string) => {
-    return email.substring(0, 2).toUpperCase();
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
-    <nav className="bg-white shadow-sm py-4">
-      <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
-        <Link to="/" className="flex items-center space-x-2">
-          <span className="text-2xl font-bold text-primary">DonorBookies</span>
+    <div className="bg-background sticky top-0 z-50 border-b">
+      <div className="container flex items-center justify-between py-4">
+        <Link to="/" className="font-bold text-2xl text-foreground">
+          DonorBookies
         </Link>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-6">
-          <Link to="/how-it-works" className="text-gray-600 hover:text-primary transition-colors">
-            How It Works
-          </Link>
-          <Link to="/faq" className="text-gray-600 hover:text-primary transition-colors">
-            FAQ
-          </Link>
-          <Link to="/about" className="text-gray-600 hover:text-primary transition-colors">
-            About Us
-          </Link>
-          <Link to="/blog" className="text-gray-600 hover:text-primary transition-colors">
-            Blog
-          </Link>
+        <NavigationMenu className="hidden md:flex">
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <Link to="/" className="text-foreground hover:text-primary">
+                Home
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger>Create</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid w-[300px] gap-3 p-4 md:w-[400px] md:grid-cols-2">
+                  <li className="row-span-3">
+                    <NavigationMenuLink asChild>
+                      <Link
+                        className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                        to="/customize"
+                      >
+                        <BookOpen className="h-6 w-6" />
+                        <div className="mb-2 mt-4 text-lg font-medium">
+                          Personalized Books
+                        </div>
+                        <p className="text-sm leading-tight text-muted-foreground">
+                          Create custom storybooks for your family's unique journey
+                        </p>
+                      </Link>
+                    </NavigationMenuLink>
+                  </li>
+                  <li>
+                    <NavigationMenuLink asChild>
+                      <Link
+                        to="/family-tree"
+                        className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                      >
+                        <div className="text-sm font-medium leading-none flex items-center gap-2">
+                          <Users className="h-4 w-4" />
+                          Family Tree Builder
+                        </div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          Build inclusive family trees for modern families
+                        </p>
+                      </Link>
+                    </NavigationMenuLink>
+                  </li>
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link to="/about" className="text-foreground hover:text-primary">
+                About
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link to="/blog" className="text-foreground hover:text-primary">
+                Blog
+              </Link>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
 
-          {/* Add Cart Icon */}
-          <CartIndicator />
-
+        <div className="flex items-center space-x-4">
+          <ModeToggle />
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                  <Avatar>
-                    <AvatarFallback>{getInitials(user.email || '')}</AvatarFallback>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={user.avatar_url || ""} alt={user.display_name || "Avatar"} />
+                    <AvatarFallback>{user.display_name?.charAt(0) || "U"}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <div className="flex items-center justify-start gap-2 p-2">
-                  <div className="flex flex-col space-y-1 leading-none">
-                    <p className="font-medium">{user.email}</p>
-                  </div>
-                </div>
-                <DropdownMenuSeparator />
+              <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuItem asChild>
-                  <Link to="/account" className="w-full flex items-center">
-                    <User className="w-4 h-4 mr-2" />
-                    <span>Account</span>
-                  </Link>
+                  <Link to="/account">Account</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onSelect={handleSignOut} className="cursor-pointer">
-                  <LogOut className="w-4 h-4 mr-2" />
-                  <span>Sign Out</span>
-                </DropdownMenuItem>
+                <DropdownMenuItem onClick={signOut}>Logout</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="flex items-center space-x-4">
+            <>
               <Link to="/login">
-                <Button variant="outline">Login</Button>
+                <Button variant="outline" size="sm">
+                  Log In
+                </Button>
               </Link>
               <Link to="/signup">
-                <Button>Sign Up</Button>
+                <Button size="sm">Sign Up</Button>
               </Link>
-            </div>
+            </>
           )}
         </div>
-
-        {/* Mobile Menu Button */}
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <div className="flex items-center md:hidden">
-            <CartIndicator />
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Menu className="h-6 w-6" />
-                <span className="sr-only">Toggle menu</span>
-              </Button>
-            </SheetTrigger>
-          </div>
-          <SheetContent side="right">
-            <div className="flex flex-col space-y-4 mt-8">
-              <Link
-                to="/how-it-works"
-                className="text-lg font-medium"
-                onClick={() => setIsOpen(false)}
-              >
-                How It Works
-              </Link>
-              <Link
-                to="/faq"
-                className="text-lg font-medium"
-                onClick={() => setIsOpen(false)}
-              >
-                FAQ
-              </Link>
-              <Link
-                to="/about"
-                className="text-lg font-medium"
-                onClick={() => setIsOpen(false)}
-              >
-                About Us
-              </Link>
-              <Link
-                to="/blog"
-                className="text-lg font-medium"
-                onClick={() => setIsOpen(false)}
-              >
-                Blog
-              </Link>
-              <Link
-                to="/cart"
-                className="text-lg font-medium"
-                onClick={() => setIsOpen(false)}
-              >
-                Cart
-              </Link>
-
-              {user ? (
-                <>
-                  <Link
-                    to="/account"
-                    className="text-lg font-medium"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Account
-                  </Link>
-                  <Button onClick={() => { signOut(); setIsOpen(false); }}>
-                    Sign Out
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Link to="/login" onClick={() => setIsOpen(false)}>
-                    <Button variant="outline" className="w-full">Login</Button>
-                  </Link>
-                  <Link to="/signup" onClick={() => setIsOpen(false)}>
-                    <Button className="w-full">Sign Up</Button>
-                  </Link>
-                </>
-              )}
-            </div>
-          </SheetContent>
-        </Sheet>
       </div>
-    </nav>
+    </div>
   );
 };
 

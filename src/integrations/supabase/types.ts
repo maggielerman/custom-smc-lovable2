@@ -44,6 +44,7 @@ export type Database = {
           content: Json
           cover_image_url: string | null
           created_at: string
+          customization: Json | null
           id: string
           published: boolean
           template_id: string
@@ -55,6 +56,7 @@ export type Database = {
           content?: Json
           cover_image_url?: string | null
           created_at?: string
+          customization?: Json | null
           id?: string
           published?: boolean
           template_id: string
@@ -66,6 +68,7 @@ export type Database = {
           content?: Json
           cover_image_url?: string | null
           created_at?: string
+          customization?: Json | null
           id?: string
           published?: boolean
           template_id?: string
@@ -83,76 +86,12 @@ export type Database = {
           },
         ]
       }
-      blog_posts: {
-        Row: {
-          content: string
-          created_at: string
-          id: string
-          published: boolean
-          title: string
-          updated_at: string
-          featured_image_url: string | null
-          user_id: string
-        }
-        Insert: {
-          content: string
-          created_at?: string
-          id?: string
-          published?: boolean
-          title: string
-          updated_at?: string
-          featured_image_url?: string | null
-          user_id: string
-        }
-        Update: {
-          content?: string
-          created_at?: string
-          id?: string
-          published?: boolean
-          title?: string
-          updated_at?: string
-          featured_image_url?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      families: {
-        Row: {
-          id: string
-          user_id: string
-          name: string
-          structure: string
-          members: Json
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          name: string
-          structure: string
-          members?: Json
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          name?: string
-          structure?: string
-          members?: Json
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       profiles: {
         Row: {
           avatar_url: string | null
           created_at: string
           display_name: string | null
           id: string
-          is_contributor: boolean
           updated_at: string
           username: string | null
         }
@@ -161,7 +100,6 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id: string
-          is_contributor?: boolean
           updated_at?: string
           username?: string | null
         }
@@ -170,7 +108,6 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
-          is_contributor?: boolean
           updated_at?: string
           username?: string | null
         }
