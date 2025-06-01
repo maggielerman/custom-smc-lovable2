@@ -1,7 +1,7 @@
 
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react'
 import { User, Session } from '@supabase/supabase-js'
-import { supabaseClient } from '@/lib/supabase'
+import { supabase } from '@/integrations/supabase/client'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
@@ -21,14 +21,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [isSupabaseConnected, setIsSupabaseConnected] = useState(!!supabaseClient)
+  const [isSupabaseConnected, setIsSupabaseConnected] = useState(true)
   const navigate = useNavigate()
 
   useEffect(() => {
     const getSession = async () => {
       setIsLoading(true)
       
-      if (!supabaseClient) {
+      if (!supabase) {
+        console.error('Supabase client not available')
+        setIsSupabaseConnected(false)
         setIsLoading(false)
         return
       }
@@ -36,7 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       try {
         // FIRST check for existing session before setting up listener
         // to prevent race conditions
-        const { data: { session: existingSession }, error } = await supabaseClient.auth.getSession()
+        const { data: { session: existingSession }, error } = await supabase.auth.getSession()
         
         if (error) {
           console.error('Error fetching session:', error)
@@ -47,7 +49,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(existingSession?.user ?? null)
         
         // THEN set up auth state listener for future changes
-        const { data: { subscription } } = supabaseClient.auth.onAuthStateChange(
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
           (event, updatedSession) => {
             console.log('Auth state change:', event, !!updatedSession)
             setSession(updatedSession)
@@ -73,11 +75,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signIn = async (email: string, password: string) => {
     try {
-      if (!supabaseClient) {
+      if (!supabase) {
         throw new Error('Supabase is not connected')
       }
       
-      const { error, data } = await supabaseClient.auth.signInWithPassword({
+      const { error, data } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
@@ -114,11 +116,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signUp = async (email: string, password: string) => {
     try {
-      if (!supabaseClient) {
+      if (!supabase) {
         throw new Error('Supabase is not connected')
       }
       
-      const { error, data } = await supabaseClient.auth.signUp({
+      const { error, data } = await supabase.auth.signUp({
         email,
         password,
       })
@@ -154,11 +156,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     try {
-      if (!supabaseClient) {
+      if (!supabase) {
         throw new Error('Supabase is not connected')
       }
       
-      const { error } = await supabaseClient.auth.signOut()
+      const { error } = await supabase.auth.signOut()
       if (error) throw error
       
       toast.success("Signed out successfully")

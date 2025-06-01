@@ -117,18 +117,13 @@ export type Database = {
   }
 }
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
-
-// Create Supabase client using the integration only if env vars are present
-export const supabaseClient =
-  SUPABASE_URL && SUPABASE_ANON_KEY ? supabaseFromIntegration : null
+// Use the Supabase client from integration directly
+export const supabaseClient = supabaseFromIntegration
 
 // Helper function to safely use the Supabase client
 export const getSupabaseClient = () => {
   if (!supabaseClient) {
-    const message =
-      'Supabase client is not initialized. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.'
+    const message = 'Supabase client is not initialized. Please check your connection.'
     console.error(message)
     throw new Error(message)
   }
