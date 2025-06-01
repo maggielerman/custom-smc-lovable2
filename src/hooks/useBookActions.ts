@@ -1,4 +1,3 @@
-
 import { useCallback } from "react";
 import { supabaseClient, getSupabaseClient } from "@/lib/supabase";
 
@@ -35,24 +34,22 @@ export function useBookActions({
         if (templates) {
           templateId = templates.id;
         } else {
-          // If no template found, create one
-          const { data: newTemplate, error: templateError } = await getSupabaseClient()
+          // If no template found, use a default template ID or handle gracefully
+          console.warn("Template not found in database:", selectedStory.name);
+          // You could either use a default template ID or create a fallback
+          // For now, let's use the first available template as fallback
+          const { data: fallbackTemplate } = await getSupabaseClient()
             .from("book_templates")
-            .insert({
-              name: selectedStory.name,
-              description: selectedStory.description || "A customizable story",
-              pages: selectedStory.pages || 20,
-              age_range: selectedStory.age_range || "3-8"
-            })
             .select("id")
-            .single();
+            .limit(1)
+            .maybeSingle();
           
-          if (templateError) {
-            console.error("Error creating template:", templateError);
-            throw new Error("Failed to create book template");
+          if (fallbackTemplate) {
+            templateId = fallbackTemplate.id;
+            console.log("Using fallback template:", templateId);
+          } else {
+            throw new Error("No templates available in the database");
           }
-          
-          templateId = newTemplate.id;
         }
       }
       
